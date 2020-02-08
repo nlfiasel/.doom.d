@@ -1,22 +1,11 @@
-;;; .doom.d/config.el -*- lexical-binding: t; -*-
-
-;; Place your private configuration here
-
-;; Font
 (setq doom-font (font-spec :family "Fira Mono" :size 15.3))
 ;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
-
-
-;; Repo
 (after! org
   (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                            ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
-
-;; Anki
-;; (require 'anki-editor)
-
 (setq confirm-kill-emacs nil)
+;; (require 'anki-editor)
  ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
@@ -32,16 +21,12 @@
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
          '(87 . 90) '(100 . 100)))))
-
 (map! "C-c t" 'toggle-transparency)
-(map! "C-c o" 'youdao-dictionary-search-at-point-posframe)
 ;; (map! (:after org-mode-map :g "C-c C-o" 'youdao-dictionary-search-at-point-posframe))
+(map! "C-c o" 'youdao-dictionary-search-at-point-posframe)
 (map! "C-x C-b" 'switch-to-buffer)
 (global-visual-line-mode)
-;; (setq doom-theme 'doom-outrun-electric)
-;; (setq doom-theme 'doom-fairy-floss)
-;; (setq doom-theme 'doom-one-light)
-
+(setq display-line-numbers-type 'visual)
 ;; (add-to-list 'load-path "~/.doom.d/eaf/")
 ;; (require 'eaf)
 
@@ -57,11 +42,7 @@
 ;;   (eaf-bind-key take_photo "p" eaf-camera-keybinding))
 (use-package! posframe
   :load-path "~/.doom.d/posframe/")
-
-(setq display-line-numbers-type 'visual)
-
 (setq posframe-arghandler #'my-posframe-arghandler)
-
 ;; (setq posframe-arghandler '(:internal-border-width 1 :background-color "#012762"))
 ;; (defun my-posframe-arghandler (buffer-or-name arg-name value)
 (defun my-posframe-arghandler (buffer-or-name arg-name value)
@@ -73,8 +54,6 @@
 ;; (org-link-set-parameters "chromiums" :follow (lambda (path) (browse-url-chromium (concat "https:" path))))
 ;; ;; (setq browse-url-browser-function 'browse-url-generic
 ;;       browse-url-generic-program "chromium")
-
-
 ;; (set-popup-rule! PREDICATE &key IGNORE ACTIONS SIDE SIZE WIDTH HEIGHT SLOT VSLOT TTL QUIT SELECT MODELINE AUTOSAVE PARAMETERS)
 (set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t)
 (setq sdcv-dictionary-complete-list    ;setup dictionary list for simple search
@@ -86,8 +65,6 @@
 ;; (set-popup-rules!
  ;; '(("*SDCV*" :side 'right)
    ;; ))
-
-
 (setq org-directory "~/Dropbox/org")
 (setq org-journal-dir "~/Dropbox/org/journal/")
 ;; (setq org-journal-file-type 'weekly)

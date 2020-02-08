@@ -1,12 +1,14 @@
 #+TITLE: config
+#+STARTUP: inlineimages
+#+PROPERTY: header-args :tangle yes :cache yes :results silent :padline no
 
-* Font
+* font
 #+BEGIN_SRC elisp
 (setq doom-font (font-spec :family "Fira Mono" :size 15.3))
 ;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
 #+END_SRC
 
-* Repo
+* repo
 #+BEGIN_SRC elisp
 (after! org
   (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -14,18 +16,18 @@
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
 #+END_SRC
 
-* Quit
+* quit
 关闭emacs退出确认
 #+BEGIN_SRC elisp
 (setq confirm-kill-emacs nil)
 #+END_SRC
 
-* Anki
+* anki
 #+BEGIN_SRC elisp
 ;; (require 'anki-editor)
 #+END_SRC
 
-* Transparency
+* transparency
 #+BEGIN_SRC elisp
  ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)
@@ -45,27 +47,27 @@
 (map! "C-c t" 'toggle-transparency)
 #+END_SRC
 
-* Youdao
+* youdao
 #+BEGIN_SRC elisp
 ;; (map! (:after org-mode-map :g "C-c C-o" 'youdao-dictionary-search-at-point-posframe))
 (map! "C-c o" 'youdao-dictionary-search-at-point-posframe)
 #+END_SRC
 
-* Self
+* self
 #+BEGIN_SRC elisp
 (map! "C-x C-b" 'switch-to-buffer)
 (global-visual-line-mode)
 (setq display-line-numbers-type 'visual)
 #+END_SRC
 
-* Theme
+* theme
 #+BEGIN_SRC
 ;; (setq doom-theme 'doom-outrun-electric)
 ;; (setq doom-theme 'doom-fairy-floss)
 ;; (setq doom-theme 'doom-one-light)
 #+END_SRC
 
-* Eaf
+* eaf
 #+BEGIN_SRC elisp
 ;; (add-to-list 'load-path "~/.doom.d/eaf/")
 ;; (require 'eaf)
@@ -82,7 +84,7 @@
 ;;   (eaf-bind-key take_photo "p" eaf-camera-keybinding))
 #+END_SRC
 
-* Posframe
+* posframe
 #+BEGIN_SRC elisp
 (use-package! posframe
   :load-path "~/.doom.d/posframe/")
@@ -94,7 +96,7 @@
     (or (plist-get info arg-name) value)))
 #+END_SRC
 
-* Chrome
+* chrome
 #+BEGIN_SRC elisp
 ;; (org-link-set-parameters "chrome" :follow (lambda (path) (browse-url-chrome (concat "http:" path))))
 ;; (org-link-set-parameters "chromes" :follow (lambda (path) (browse-url-chrome (concat "https:" path))))
@@ -104,7 +106,7 @@
 ;;       browse-url-generic-program "chromium")
 #+END_SRC
 
-* Sdcv
+* sdcv
 #+BEGIN_SRC elisp
 ;; (set-popup-rule! PREDICATE &key IGNORE ACTIONS SIDE SIZE WIDTH HEIGHT SLOT VSLOT TTL QUIT SELECT MODELINE AUTOSAVE PARAMETERS)
 (set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t)
@@ -119,7 +121,7 @@
    ;; ))
 #+END_SRC
 
-* Org
+* org
 #+BEGIN_SRC elisp
 (setq org-directory "~/Dropbox/org")
 (setq org-journal-dir "~/Dropbox/org/journal/")
