@@ -7,8 +7,8 @@
 ;; (package! builtin-package :disable t)
 
 ;; Anki
-(package! anki-editor)
-(package! ellocate)
-(package! youdao-dictionary)
+;; (package! anki-editor)
+;; (package! ellocate)
+;; (package! youdao-dictionary)
 (package! sdcv)
 (package! org-journal)
