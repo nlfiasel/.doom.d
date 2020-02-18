@@ -1,14 +1,12 @@
 #+TITLE: config
-#+STARTUP: inlineimages
-#+PROPERTY: header-args :tangle yes :cache yes :results silent :padline no
+# #+STARTUP: inlineimages
+# #+PROPERTY: header-args :tangle yes :cache yes :results silent :padline no
 
-* font
-#+BEGIN_SRC elisp
-(setq doom-font (font-spec :family "Fira Mono" :size 15.3))
-;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
-#+END_SRC
-
-* repo
+* config
+:PROPERTIES:
+:header-args: :tangle config.el
+:END:
+** repo
 #+BEGIN_SRC elisp
 (after! org
   (setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -16,18 +14,24 @@
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
 #+END_SRC
 
-* quit
+** font
+#+BEGIN_SRC elisp
+(setq doom-font (font-spec :family "Fira Mono" :size 15.3))
+;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
+#+END_SRC
+
+** quit
 关闭emacs退出确认
 #+BEGIN_SRC elisp
 (setq confirm-kill-emacs nil)
 #+END_SRC
 
-* anki
+** anki
 #+BEGIN_SRC elisp
 ;; (require 'anki-editor)
 #+END_SRC
 
-* transparency
+** transparency
 #+BEGIN_SRC elisp
  ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)
@@ -43,17 +47,17 @@
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
-         '(87 . 90) '(100 . 100)))))
+         '(98 . 98) '(100 . 100)))))
 (map! "C-c t" 'toggle-transparency)
 #+END_SRC
 
-* youdao
+** youdao
 #+BEGIN_SRC elisp
 ;; (map! (:after org-mode-map :g "C-c C-o" 'youdao-dictionary-search-at-point-posframe))
 ;; (map! "C-c o" 'youdao-dictionary-search-at-point-posframe)
 #+END_SRC
 
-* self
+** self
 #+BEGIN_SRC elisp
 (map! "C-x C-b" 'switch-to-buffer)
 (map! "C-x C-o" 'ace-window)
@@ -61,31 +65,15 @@
 (setq display-line-numbers-type 'visual)
 #+END_SRC
 
-* theme
-#+BEGIN_SRC
+** theme
+#+BEGIN_SRC elisp
 ;; (setq doom-theme 'doom-outrun-electric)
 ;; (setq doom-theme 'doom-fairy-floss)
-;; (setq doom-theme 'doom-one-light)
+;; (setq doom-theme 'doom-fairy-floss)
+(setq doom-theme 'doom-dark+)
 #+END_SRC
 
-* eaf
-#+BEGIN_SRC elisp
-;; (add-to-list 'load-path "~/.doom.d/eaf/")
-;; (require 'eaf)
-
-;; (use-package! eaf
-;;   :load-path "~/.doom.d/eaf"
-;;   :custom
-;;   (eaf-find-alternate-file-in-dired t)
-;;   :config
-;;   (eaf-bind-key scroll_up "RET" eaf-pdf-viewer-keybinding)
-;;   (eaf-bind-key scroll_down_page "DEL" eaf-pdf-viewer-keybinding)
-;;   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-;;   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-;;   (eaf-bind-key take_photo "p" eaf-camera-keybinding))
-#+END_SRC
-
-* posframe
+** posframe
 #+BEGIN_SRC elisp
 ;; (use-package! posframe
 ;;   :load-path "~/.doom.d/posframe/")
@@ -97,7 +85,7 @@
 ;;     (or (plist-get info arg-name) value)))
 #+END_SRC
 
-* browser
+** browser
 #+BEGIN_SRC elisp
 ;; (org-link-set-parameters "chrome" :follow (lambda (path) (browse-url-chrome (concat "http:" path))))
 ;; (org-link-set-parameters "chromes" :follow (lambda (path) (browse-url-chrome (concat "https:" path))))
@@ -110,7 +98,7 @@
 ;; (setq browse-url-browser-function 'browse-url-default-browser)
 ;; (setq process-connection-type nil)
 ;; (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "xdg-open")
-(setq browse-url-browser-function 'browse-url-firefox)
+(setq browse-url-browser-function 'browse-url-chromium)
 (after! org
   (defun counsel-locate-action-extern (x)
     "Use xdg-open shell command on X."
@@ -124,7 +112,7 @@
                         (shell-quote-argument x)))))
 #+END_SRC
 
-* sdcv
+** sdcv
 #+BEGIN_SRC elisp
 ;; (set-popup-rule! PREDICATE &key IGNORE ACTIONS SIDE SIZE WIDTH HEIGHT SLOT VSLOT TTL QUIT SELECT MODELINE AUTOSAVE PARAMETERS)
 (set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t)
@@ -139,7 +127,7 @@
    ;; ))
 #+END_SRC
 
-* org
+** org
 #+BEGIN_SRC elisp
 (setq org-directory "~/Dropbox/org")
 (setq org-journal-dir "~/Dropbox/org/journal/")
@@ -147,29 +135,29 @@
 (setq org-journal-date-format "%A, %d %B %Y")
 #+END_SRC
 
-* debug
+** debug
 #+BEGIN_SRC elisp
 ;; (setq debug-on-quit t)
 ;; (after! eshell
   ;; (setq eshell-visual-commands (delete "bash" eshell-visual-commands)))
 #+END_SRC
 
-* proxy
+** proxy
 #+BEGIN_SRC elisp
-(setq url-proxy-services
-      '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-        ("http" . "127.0.0.1:8118")
-        ("https" . "127.0.0.1:8118")))
+;; (setq url-proxy-services
+      ;; '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+        ;; ("http" . "127.0.0.1:8118")
+        ;; ("https" . "127.0.0.1:8118")))
 ;; (setq url-gateway-method 'socks)
 ;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
 #+END_SRC
 
-* popup
+** popup
 #+BEGIN_SRC elisp
 (set-popup-rule! "*lsp-help*" :side 'bottom :size 60 :modeline nil :select nil :quit t)
 #+END_SRC
 
-* clipboard
+** clipboard
 #+BEGIN_SRC elisp
 (defun org-insert-clipboard-image ()
   "Take a screenshot into a time stamped unique-named file in the
@@ -191,4 +179,105 @@ same directory as the org-buffer and insert a link to this file."
 (map! "C-c i" 'org-insert-clipboard-image)
 ;; (setq org-image-actual-width t)
 (setq org-image-actual-width (/ (display-pixel-width) 3))
+#+END_SRC
+** modeline
+#+BEGIN_SRC elisp
+(map! "C-c h" 'hide-mode-line-mode)
+#+END_SRC
+** dir
+#+BEGIN_SRC elisp
+(defun dir-org ()
+  "open org dictionary at Dropbox"
+  (interactive)
+  (+lookup/file "~/Dropbox/org"))
+(map! "C-c o" 'dir-org)
+;; (defun dir-temp ()
+;;   "open org dictionary at Temp"
+;;   (interactive)
+;;   (+lookup/file "~/Temp"))
+;; (map! "C-c t" 'dir-temp)
+#+END_SRC
+** tramp
+if remote use zsh, add in the front
+#+BEGIN_EXAMPLE
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+#+END_EXAMPLE
+
+#+BEGIN_SRC elisp
+;; (setf tramp-ssh-controlmaster-options (concat "-o SendEnv TRAMP=yes " tramp-ssh-controlmaster-options))
+(setq tramp-ssh-controlmaster-options
+   "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+#+END_SRC
+** eaf
+*** package
+#+BEGIN_SRC elisp
+(use-package! eaf
+  :load-path "~/.doom.d/eaf"
+  :after evil
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (setq which-key-show-transient-maps t)
+  (defun call-doom-leader ()
+    (interactive)
+    (set-transient-map doom-leader-map))
+
+#+END_SRC
+
+*** browser
+#+BEGIN_SRC elisp
+(after! eaf
+  (set-evil-initial-state! 'eaf-mode 'emacs)
+  (defun eaf-org-open-file (file &optional link)
+    "An wrapper function on `eaf-open'."
+    (eaf-open file))
+
+  (map! "C-c b" 'eaf-open-browser)
+  (map! "C-c s" 'eaf-open-browser-with-history)
+  ;; (which-key-show-keymap doom-leader-map)
+
+  (eaf-bind-key call-doom-leader "SPC" eaf-browser-keybinding)
+  (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
+  (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
+  (eaf-bind-key sdcv-search-input "M-i" eaf-browser-keybinding)
+  (eaf-bind-key eaf-open-bookmark "C-c m" eaf-browser-keybinding)
+
+  (eaf-setq eaf-browser-enable-plugin "false")
+  (eaf-setq eaf-browser-enable-javascript "true")
+
+  (setq browse-url-browser-function 'eaf-open-browser))
+
+  ;; use `emacs-application-framework' to open PDF file: link
+  ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+  (defalias 'browse-web #'eaf-open-browser))
+
+#+END_SRC
+
+* autoload
+:PROPERTIES:
+:header-args: :tangle autoload.el
+:END:
+** eaf
+#+BEGIN_SRC elisp
+;; (add-to-list 'load-path "~/.doom.d/eaf/")
+;; (require 'eaf)
+
+;; ###autoload
+
+
+
+;; d          eaf-proxy-insert_or_scroll_up_page
+;; f          eaf-proxy-insert_or_open_link
+;; g          eaf-proxy-insert_or_scroll_to_begin
+;; h          eaf-proxy-insert_or_scroll_left
+;; i          eaf-proxy-insert_or_open_download_manage_page
+
+;; l          eaf-proxy-insert_or_scroll_right
+;; t          eaf-proxy-insert_or_new_blank_page
+;; u          eaf-proxy-insert_or_scroll_down_page
+;; x          eaf-proxy-insert_or_close_buffer
+
+
+
+
 #+END_SRC
