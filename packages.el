@@ -12,3 +12,4 @@
 ;; (package! youdao-dictionary)
 (package! sdcv)
 (package! org-journal)
+(package! org-noter)

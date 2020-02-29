@@ -3,17 +3,17 @@
                            ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
 
-(setq doom-font (font-spec :family "Fira Mono" :size 15.3))
+(setq doom-font (font-spec :family "Fira Mono" :size 19))
 ;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
 
 (setq confirm-kill-emacs nil)
 
 ;; (require 'anki-editor)
 
- ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(96 . 96))
+(add-to-list 'default-frame-alist '(alpha . (96 . 96)))
 (defun toggle-transparency ()
   (interactive)
   (let ((alpha (frame-parameter nil 'alpha)))
@@ -24,7 +24,7 @@
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
-         '(98 . 98) '(100 . 100)))))
+         '(96 . 96) '(100 . 100)))))
 (map! "C-c t" 'toggle-transparency)
 
 ;; (map! (:after org-mode-map :g "C-c C-o" 'youdao-dictionary-search-at-point-posframe))
@@ -38,7 +38,10 @@
 ;; (setq doom-theme 'doom-outrun-electric)
 ;; (setq doom-theme 'doom-fairy-floss)
 ;; (setq doom-theme 'doom-fairy-floss)
-(setq doom-theme 'doom-dark+)
+;; (setq doom-theme 'doom-dark+)
+;; (setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-dracula)
+(setq doom-dark+-blue-modeline t)
 
 ;; (use-package! posframe
 ;;   :load-path "~/.doom.d/posframe/")
@@ -85,10 +88,18 @@
  ;; '(("*SDCV*" :side 'right)
    ;; ))
 
-(setq org-directory "~/Dropbox/org")
-(setq org-journal-dir "~/Dropbox/org/journal/")
-;; (setq org-journal-file-type 'weekly)
-(setq org-journal-date-format "%A, %d %B %Y")
+(after! org
+  (setq org-directory "~/Dropbox/org")
+  (setq org-journal-dir "~/Dropbox/org/journal/")
+  ;; (setq org-journal-file-type 'weekly)
+  (setq org-journal-date-format "%A, %d %B %Y")
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
+           "* %?\n  %i\n  %a")
+          ("j" "Journal" entry (file+datetree "~/Dropbox/org/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a"))))
 
 ;; (setq debug-on-quit t)
 ;; (after! eshell
@@ -147,7 +158,7 @@ same directory as the org-buffer and insert a link to this file."
   :custom
   (eaf-find-alternate-file-in-dired t)
   :config
-  (setq which-key-show-transient-maps t)
+  ;; (setq which-key-show-transient-maps t)
   (defun call-doom-leader ()
     (interactive)
     (set-transient-map doom-leader-map))
@@ -162,7 +173,7 @@ same directory as the org-buffer and insert a link to this file."
   (map! "C-c s" 'eaf-open-browser-with-history)
   ;; (which-key-show-keymap doom-leader-map)
 
-  (eaf-bind-key call-doom-leader "SPC" eaf-browser-keybinding)
+  ;; (eaf-bind-key call-doom-leader "SPC" eaf-browser-keybinding)
   (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
   (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
   (eaf-bind-key sdcv-search-input "M-i" eaf-browser-keybinding)
