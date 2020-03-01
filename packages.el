@@ -15,5 +15,15 @@
 
 (package! liberime-config
   :recipe (:host github
-           :repo "merrickluo/liberime"
-           :files ("CMakeLists.txt" "Makefile" "src" "liberime-config.el")))
+                 :repo "merrickluo/liberime"
+                 :files ("CMakeLists.txt" "Makefile" "src" "liberime-config.el")))
+
+(package! eaf
+  :recipe (:host github
+                 :repo "manateelazycat/emacs-application-framework"
+                 :files ("*")))
+
+(package! posframe
+  :recipe (:host github
+                 :repo "tumashu/posframe"
+                 :files ("*")))

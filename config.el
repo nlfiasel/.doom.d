@@ -3,7 +3,7 @@
                            ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
                            ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
 
-(setq doom-font (font-spec :family "Fira Mono" :size 19))
+(setq doom-font (font-spec :family "Fira Mono" :size 18))
 ;; (setq doom-font (font-spec :family "Fira Mono" :size 16.3))
 
 (setq confirm-kill-emacs nil)
@@ -153,7 +153,6 @@ same directory as the org-buffer and insert a link to this file."
    "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 
 (use-package! eaf
-  :load-path "~/.doom.d/eaf"
   :after evil
   :custom
   (eaf-find-alternate-file-in-dired t)
@@ -196,6 +195,7 @@ same directory as the org-buffer and insert a link to this file."
   :after  liberime-config
   :init
   (setq pyim-title "ㄓ")
+  (setq pyim-punctuation-translate-p '(no yes auto))
   :config
   (setq pyim-page-tooltip 'minibuffer)
   (setq pyim-default-scheme 'rime)
@@ -205,7 +205,6 @@ same directory as the org-buffer and insert a link to this file."
                   pyim-probe-isearch-mode
                   pyim-probe-program-mode
                   pyim-probe-org-structure-template))
-  (setq pyim-punctuation-translate-p '(no yes auto))
 (after! org
   ;; (map! "C-;" 'pyim-delete-word-from-personal-buffer)
   (map! :g "s-j" 'pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
