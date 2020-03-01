@@ -187,3 +187,42 @@ same directory as the org-buffer and insert a link to this file."
   ;; use `emacs-application-framework' to open PDF file: link
   ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
   (defalias 'browse-web #'eaf-open-browser))
+
+(set-docsets! 'python-mode :add "Python_3")
+
+;; (map! :leader :m "a" 'toggle-input-method)
+(use-package! pyim
+
+  :after  liberime-config
+  :init
+  (setq pyim-title "ㄓ")
+  :config
+  (setq pyim-page-tooltip 'minibuffer)
+  (setq pyim-default-scheme 'rime)
+  (setq pyim-page-length 20)
+  (setq-default pyim-english-input-switch-functions
+                '(pyim-probe-dynamic-english
+                  pyim-probe-isearch-mode
+                  pyim-probe-program-mode
+                  pyim-probe-org-structure-template))
+  (setq pyim-punctuation-translate-p '(no yes auto))
+(after! org
+  ;; (map! "C-;" 'pyim-delete-word-from-personal-buffer)
+  (map! :g "s-j" 'pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  )
+)
+;; (global-set-key (kbd "s-j") 'pyim-convert-string-at-point)
+(use-package! liberime-config
+  :init
+  ;; (setq liberime-user-data-dir "~/.config/ibus/rime/")
+  ;; (liberime-start "/usr/share/rime-data/" (file-truename "~/.emacs.d/pyim/rime/"))
+  (add-hook 'after-liberime-load-hook
+            (lambda ()
+              (liberime-select-schema "double_pinyin_flypy")))
+  ;; (liberime-select-schema "luna_pinyin_simp")))
+  :config
+  ;; (liberime-start "/usr/share/rime-data"
+  ;; (file-truename "~/.emacs.d/rime/"))
+  (setq default-input-method "pyim")
+  ;; (liberime-select-schema "double_pinyin_fly")
+  )

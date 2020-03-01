@@ -1,6 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
-;;; .doom.d/packages.el
-
+;;; packages.el
 ;;; Examples:
 ;; (package! some-package)
 ;; (package! another-package :recipe (:host github :repo "username/repo"))
@@ -13,3 +12,8 @@
 (package! sdcv)
 (package! org-journal)
 (package! org-noter)
+
+(package! liberime-config
+  :recipe (:host github
+           :repo "merrickluo/liberime"
+           :files ("CMakeLists.txt" "Makefile" "src" "liberime-config.el")))
