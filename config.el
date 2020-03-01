@@ -133,7 +133,10 @@ same directory as the org-buffer and insert a link to this file."
   (org-display-inline-images))
 (map! "C-c i" 'org-insert-clipboard-image)
 ;; (setq org-image-actual-width t)
-(setq org-image-actual-width (/ (display-pixel-width) 3))
+(after! org
+  (setq org-image-actual-width (/ (display-pixel-width) 3)
+        )
+  )
 
 (map! "C-c h" 'hide-mode-line-mode)
 
@@ -142,11 +145,18 @@ same directory as the org-buffer and insert a link to this file."
   (interactive)
   (+lookup/file "~/Dropbox/org"))
 (map! "C-c o" 'dir-org)
+(defun dir-emacs ()
+  "open org dictionary at Dropbox"
+  (interactive)
+  (+lookup/file "~/.emacs.d"))
+(map! "C-c e" 'dir-emacs)
 ;; (defun dir-temp ()
 ;;   "open org dictionary at Temp"
 ;;   (interactive)
 ;;   (+lookup/file "~/Temp"))
 ;; (map! "C-c t" 'dir-temp)
+
+(setq evil-escape-key-sequence nil)
 
 ;; (setf tramp-ssh-controlmaster-options (concat "-o SendEnv TRAMP=yes " tramp-ssh-controlmaster-options))
 (setq tramp-ssh-controlmaster-options
@@ -167,11 +177,10 @@ same directory as the org-buffer and insert a link to this file."
   (defun eaf-org-open-file (file &optional link)
     "An wrapper function on `eaf-open'."
     (eaf-open file))
-
   (map! "C-c b" 'eaf-open-browser)
   (map! "C-c s" 'eaf-open-browser-with-history)
   ;; (which-key-show-keymap doom-leader-map)
-
+  ;; (eaf-setq eaf-browser-download-path "other_path")
   ;; (eaf-bind-key call-doom-leader "SPC" eaf-browser-keybinding)
   (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
   (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
@@ -180,36 +189,42 @@ same directory as the org-buffer and insert a link to this file."
 
   (eaf-setq eaf-browser-enable-plugin "false")
   (eaf-setq eaf-browser-enable-javascript "true")
+  (eaf-setq eaf-browse-default-zoom "1.5")
 
   (setq browse-url-browser-function 'eaf-open-browser))
 
-  ;; use `emacs-application-framework' to open PDF file: link
-  ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
-  (defalias 'browse-web #'eaf-open-browser))
+;; use `emacs-application-framework' to open PDF file: link
+;; (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file))
+(defalias 'browse-web #'eaf-open-browser))
 
 (set-docsets! 'python-mode :add "Python_3")
 
 ;; (map! :leader :m "a" 'toggle-input-method)
+;; (setq evil-input-method "pyim")
 (use-package! pyim
 
   :after  liberime-config
   :init
   (setq pyim-title "ㄓ")
   (setq pyim-punctuation-translate-p '(no yes auto))
+  (setq evil-input-method "pyim")
   :config
   (setq pyim-page-tooltip 'minibuffer)
   (setq pyim-default-scheme 'rime)
-  (setq pyim-page-length 20)
+  (setq pyim-page-length 9)
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-dynamic-english
                   pyim-probe-isearch-mode
                   pyim-probe-program-mode
                   pyim-probe-org-structure-template))
-(after! org
-  ;; (map! "C-;" 'pyim-delete-word-from-personal-buffer)
-  (map! :g "s-j" 'pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  (after! org
+    ;; (map! "C-;" 'pyim-delete-word-from-personal-buffer)
+    (map! :g "s-j" 'pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+    (map! :g "<XF86Tools>" 'pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+    ;; (setq evil-input-method "pyim")
+    ;; (toggle-input-method)
+    )
   )
-)
 ;; (global-set-key (kbd "s-j") 'pyim-convert-string-at-point)
 (use-package! liberime-config
   :init

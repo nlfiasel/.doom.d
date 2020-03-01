@@ -1,0 +1,5 @@
+intercept=${"$(xdotool getwindowfocus getwindowname)":0-5:5}
+emacs="Emacs"
+if [ "$intercept" = "$emacs" ]; then
+    xdotool key super+j
+fi
