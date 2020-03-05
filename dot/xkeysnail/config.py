@@ -4,14 +4,15 @@ from xkeysnail.transform import *
 
 define_modmap({
     Key.ESC: Key.GRAVE,
+    Key.CAPSLOCK: Key.LEFT_CTRL,
 })
 
 define_multipurpose_modmap({
-    Key.CAPSLOCK: [Key.ESC, Key.LEFT_CTRL],
+    Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
 })
 
 define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
-    Key.CAPSLOCK: [Key.ESC, Key.LEFT_CTRL],
+    Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.LEFT_SHIFT: [Key.F13, Key.LEFT_SHIFT],
 })
 
