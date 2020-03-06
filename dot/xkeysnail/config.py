@@ -8,10 +8,12 @@ define_modmap({
 })
 
 define_multipurpose_modmap({
+    Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
 })
 
 define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
+    Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.LEFT_SHIFT: [Key.F13, Key.LEFT_SHIFT],
 })
@@ -27,4 +29,5 @@ define_keymap(None, {
     K("RC-LEFT_BRACE"): K("volumedown"),
     K("RC-RIGHT_BRACE"): K("volumeup"),
     K("RC-BACKSLASH"): K("print"),
+    K("RC-APOSTROPHE"): K("CAPSLOCK")
 })

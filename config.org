@@ -112,6 +112,10 @@ same directory as the org-buffer and insert a link to this file."
   (interactive)
   (+lookup/file "~/.emacs.d"))
 (map! "C-c e" 'dir-emacs)
+(defun dir-emacs-repos ()
+  (interactive)
+  (+lookup/file "~/.emacs.d/.local/straight/repos"))
+(map! "C-c d" 'dir-emacs-repos)
 #+END_SRC
 
 ** evil
