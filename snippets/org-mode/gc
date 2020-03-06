@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: gc
-# key: gc_
-# --
-*** gc
-#+BEGIN_SRC conf :tangle no
-$0
-#+END_SRC

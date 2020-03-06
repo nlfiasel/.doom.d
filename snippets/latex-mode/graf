@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: graffito
-# key: \graf
-# condition: t
-# --
-\graffito{$0}

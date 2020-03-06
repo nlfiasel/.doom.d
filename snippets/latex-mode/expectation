@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: expectation
-# key: ep_
-# condition: (texmathp)
-# --
-\mathbb{E}($0)

@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: css
-# key: css_
-# condition: t
-# --
-#+begin_src css
-$0
-#+end_src
