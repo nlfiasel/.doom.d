@@ -204,8 +204,6 @@ same directory as the org-buffer and insert a link to this file."
 ** elpa
 #+BEGIN_SRC elisp
 (package! sdcv)
-(package! org-journal)
-(package! org-noter)
 #+END_SRC
 
 ** rime

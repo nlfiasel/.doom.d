@@ -4,4 +4,4 @@
 #+STARTUP: inlineimages nofold
 
 * TODO
-[ ]
+- [ ] 移动一下 rime 的文件夹?

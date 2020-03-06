@@ -1,3 +1,4 @@
 /*.el
 /*.elc
 !/init.el
+/.auctex-auto/*
