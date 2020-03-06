@@ -23,16 +23,16 @@ define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
 })
 
 define_keymap(None, {
-    K("RC-key_4"): K("F4"),
-    K("RC-key_5"): K("F5"),
-    K("RC-key_6"): K("F6"),
-    K("RC-key_7"): K("F7"),
-    K("RC-key_8"): K("F8"),
-    K("RC-key_9"): K("F9"),
-    K("RC-p"): K("mute"),
-    K("RC-LEFT_BRACE"): K("volumedown"),
-    K("RC-RIGHT_BRACE"): K("volumeup"),
-    K("RC-BACKSLASH"): K("print"),
+    K("RC-KEY_4"): K("F4"),
+    K("RC-KEY_5"): K("F5"),
+    K("RC-KEY_6"): K("F6"),
+    K("RC-KEY_7"): K("F7"),
+    K("RC-KEY_8"): K("F8"),
+    K("RC-KEY_9"): K("F9"),
+    K("RC-P"): K("MUTE"),
+    K("RC-LEFT_BRACE"): K("VOLUMEDOWN"),
+    K("RC-RIGHT_BRACE"): K("VOLUMEUP"),
+    K("RC-BACKSLASH"): K("PRINT"),
     K("RC-APOSTROPHE"): K("CAPSLOCK"),
 
     K("RC-H"): K("LEFT"),
@@ -43,4 +43,8 @@ define_keymap(None, {
     K("LC-RC-J"): K("LC-DOWN"),
     K("LC-RC-K"): K("LC-UP"),
     K("LC-RC-L"): K("LC-RIGHT"),
+
+    K("LC-RC-LM-KEY_1"): K("LC-LM-F1"),
+    K("LC-RC-LM-KEY_2"): K("LC-LM-F2"),
+    K("LC-RC-LM-KEY_3"): K("LC-LM-F3"),
 })
