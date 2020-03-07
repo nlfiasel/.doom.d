@@ -2,6 +2,8 @@
 import re
 from xkeysnail.transform import *
 
+define_timeout(1)
+
 define_modmap({
     Key.ESC: Key.GRAVE,
     Key.CAPSLOCK: Key.LEFT_CTRL,
