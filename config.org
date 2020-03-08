@@ -37,6 +37,7 @@
 ** self
 #+BEGIN_SRC elisp
 (map! "C-x C-b" 'switch-to-buffer)
+(map! "C-x b" '+ivy/switch-workspace-buffer)
 (map! "C-x C-o" 'ace-window)
 (global-visual-line-mode)
 (setq display-line-numbers-type 'visual)
@@ -70,6 +71,10 @@
            "* %?\n  %i\n  %a")
           ("j" "Journal" entry (file+datetree "~/Dropbox/org/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a"))))
+(global-set-key (kbd ",")
+                #'(lambda ()
+                    (interactive)
+                    (insert ", ")))
 #+END_SRC
 
 ** popup
@@ -86,8 +91,7 @@ same directory as the org-buffer and insert a link to this file."
   (setq filename
         (concat
          (make-temp-name
-          (concat "~/Dropbox/org/"
-                  "images/"
+          (concat "~/Dropbox/org/images/"
                   (file-name-base buffer-file-name)
                   "_"
                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
@@ -154,6 +158,12 @@ same directory as the org-buffer and insert a link to this file."
   (eaf-setq eaf-browser-enable-javascript "true")
   (eaf-setq eaf-browse-default-zoom "1.5")
 
+  (defun eaf-search-copy ()
+    (interactive)
+    (setq word (eaf-proxy-copy_text))
+    (sdcv-search-input #'word)
+    )
+
   (setq browse-url-browser-function 'eaf-open-browser)
   (defalias 'browse-web #'eaf-open-browser))
 #+END_SRC
@@ -204,6 +214,7 @@ same directory as the org-buffer and insert a link to this file."
 ** elpa
 #+BEGIN_SRC elisp
 (package! sdcv)
+(package! emojify)
 #+END_SRC
 
 ** rime
