@@ -2,25 +2,25 @@
 import re
 from xkeysnail.transform import *
 
-define_timeout(1)
+define_timeout(0.3)
 
 define_modmap({
     Key.ESC: Key.GRAVE,
     Key.CAPSLOCK: Key.LEFT_CTRL,
+    Key.RIGHT_ALT: Key.LEFT_SHIFT,
 })
 
 define_multipurpose_modmap({
     Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
     Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
-    Key.ENTER: [Key.ENTER, Key.RIGHT_SHIFT],
+    Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
 })
 
 define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
     Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
     Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
-    Key.ENTER: [Key.ENTER, Key.RIGHT_SHIFT],
     Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
     Key.LEFT_SHIFT: [Key.F13, Key.LEFT_SHIFT],
 })

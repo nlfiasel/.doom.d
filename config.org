@@ -143,6 +143,8 @@ same directory as the org-buffer and insert a link to this file."
   (eaf-find-alternate-file-in-dired t)
   :config
   (set-evil-initial-state! 'eaf-mode 'emacs)
+  (add-hook 'eaf-mode-hook #'hide-mode-line-mode)
+
   (defun eaf-org-open-file (file &optional link)
     (eaf-open file))
 
@@ -156,13 +158,7 @@ same directory as the org-buffer and insert a link to this file."
 
   (eaf-setq eaf-browser-enable-plugin "false")
   (eaf-setq eaf-browser-enable-javascript "true")
-  (eaf-setq eaf-browse-default-zoom "1.5")
-
-  (defun eaf-search-copy ()
-    (interactive)
-    (setq word (eaf-proxy-copy_text))
-    (sdcv-search-input #'word)
-    )
+  (eaf-setq eaf-browser-default-zoom "1.25")
 
   (setq browse-url-browser-function 'eaf-open-browser)
   (defalias 'browse-web #'eaf-open-browser))
@@ -204,17 +200,9 @@ same directory as the org-buffer and insert a link to this file."
 ** header
 #+BEGIN_SRC elisp
 ;; -*- no-byte-compile: t; -*-
-;;; packages.el
-;;; Examples:
-;; (package! some-package)
-;; (package! another-package :recipe (:host github :repo "username/repo"))
-;; (package! builtin-package :disable t)
-#+END_SRC
-
-** elpa
-#+BEGIN_SRC elisp
 (package! sdcv)
 (package! emojify)
+(package! theme-changer)
 #+END_SRC
 
 ** rime
