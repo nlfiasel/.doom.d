@@ -193,6 +193,46 @@ same directory as the org-buffer and insert a link to this file."
   (setq default-input-method "pyim"))
 #+END_SRC
 
+** google-translate
+#+BEGIN_SRC elisp
+(use-package! google-translate
+  :config
+  (when (and (string-match "0.11.18"
+                           (google-translate-version))
+             (>= (time-to-seconds)
+                 (time-to-seconds
+                  (encode-time 0 0 0 23 9 2018))))
+    (defun google-translate--get-b-d1 ()
+      ;; TKK='427110.1469889687'
+      (list 427110 1469889687)))
+  )
+(map! "C-c c" 'google-translate-at-point)
+(setq google-translate-base-url
+      "http://translate.google.cn/translate_a/single")
+(setq google-translate--tkk-url
+      "http://translate.google.cn/")
+(setq google-translate-listen-url
+      "http://translate.google.cn/translate_tts")
+(setq google-translate-backend-method 'curl)
+(setq google-translate-pop-up-buffer-set-focus t)
+(setq google-translate-default-source-language "en")
+(setq google-translate-default-target-language "zh-CN")
+#+END_SRC
+** telega
+#+BEGIN_SRC elisp
+(use-package! telega
+  :commands (telega)
+  :defer t
+  :init
+  (unless (display-graphic-p) (setq telega-use-images nil))
+  :config
+  (set-popup-rule! (regexp-quote telega-root-buffer-name)
+    :side 'right :size 100 :quit t :modeline t)
+  (set-popup-rule! "^◀[[({<].*[\])}>]$"
+    :side 'right :size 100 :quit t :modeline t)
+  )
+
+#+END_SRC
 * package
 :PROPERTIES:
 :header-args: :tangle packages.el
@@ -232,6 +272,21 @@ same directory as the org-buffer and insert a link to this file."
 (package! emacs-snippets :recipe (:host github :repo "hlissner/emacs-snippets" :files ("*")))
 #+END_SRC
 
+** google-translate
+#+BEGIN_SRC elisp
+(package! google-translate
+  :recipe (:host github :repo "f279801/google-translate" :branch "#98"))
+#+END_SRC
+** telega
+#+BEGIN_SRC elisp
+(package! telega
+  :recipe (:host github
+                 :repo "zevlg/telega.el"
+                 :branch "master"
+                 :files (:defaults "etc" "server" "Makefile"))
+  )
+
+#+END_SRC
 * autoload
 :PROPERTIES:
 :header-args: :tangle autoload.el
