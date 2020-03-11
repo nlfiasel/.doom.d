@@ -61,9 +61,11 @@
 ** org
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-directory "~/Dropbox/org")
-  (setq org-journal-dir "~/Dropbox/org/journal/")
-  (setq org-journal-date-format "%A, %d %B %Y")
+  (setq org-directory "~/Dropbox/org"
+        org-journal-dir "~/Dropbox/org/journal/"
+        org-journal-date-format "%A, %d %B %Y"
+        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
+        )
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "Tasks")
            "* TODO %?\n  %i\n  %a")
@@ -75,6 +77,9 @@
                 #'(lambda ()
                     (interactive)
                     (insert ", ")))
+(setq org-agenda-time-grid (quote (((daily today require-timed)
+                                    (300 600 900 1200 1500 1800 2100 2400)
+                                    "......" "----------------"))))
 #+END_SRC
 
 ** popup
