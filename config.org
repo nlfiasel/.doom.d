@@ -77,9 +77,14 @@
                 #'(lambda ()
                     (interactive)
                     (insert ", ")))
-(setq org-agenda-time-grid (quote (((daily today require-timed)
-                                    (300 600 900 1200 1500 1800 2100 2400)
-                                    "......" "----------------"))))
+(setq org-agenda-time-grid '((daily today require-timed)
+                             (300 600 900 1200 1500 1800 2100 2400)
+                             "......" "----------------"))
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+(map! "C-c j" 'org-capture
+      "C-c a" 'org-agenda
+      "C-c l" 'org-store-link
+      )
 #+END_SRC
 
 ** popup
@@ -211,7 +216,7 @@ same directory as the org-buffer and insert a link to this file."
       ;; TKK='427110.1469889687'
       (list 427110 1469889687)))
   )
-(map! "C-c c" 'google-translate-at-point)
+(map! :leader :m "j" 'google-translate-at-point)
 (setq google-translate-base-url
       "http://translate.google.cn/translate_a/single")
 (setq google-translate--tkk-url
