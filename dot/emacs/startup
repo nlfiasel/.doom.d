@@ -1,3 +1,5 @@
 #!/bin/sh
 export XMODIFIERS="@im=ibus"
-/usr/bin/emacs "$@"
+export LIBRARY_PATH=/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.1
+/usr/local/bin/emacs "$@"
+

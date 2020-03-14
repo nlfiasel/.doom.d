@@ -35,6 +35,7 @@
 #+END_SRC
 
 ** self
+(native-compile-async "~/.emacs.d/.local/straight/build/" 2 t)
 #+BEGIN_SRC elisp
 (map! "C-x C-b" 'switch-to-buffer)
 (map! "C-x b" '+ivy/switch-workspace-buffer)
@@ -60,10 +61,24 @@
 
 ** org
 #+BEGIN_SRC elisp
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
+(setq org-directory "~/Dropbox/org"
+      org-journal-dir "~/Dropbox/org/journal/"
+      org-journal-date-format "%A, %d %B %Y"
+      org-journal-enable-agenda-integration t
+      org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
+      )
 (after! org
   (setq org-directory "~/Dropbox/org"
         org-journal-dir "~/Dropbox/org/journal/"
         org-journal-date-format "%A, %d %B %Y"
+        org-journal-enable-agenda-integration t
         org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
         )
   (setq org-capture-templates
@@ -71,8 +86,9 @@
            "* TODO %?\n  %i\n  %a")
           ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
            "* %?\n  %i\n  %a")
-          ("j" "Journal" entry (file+datetree "~/Dropbox/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a"))))
+          ("j" "Journal entry" entry (function org-journal-find-location)
+           "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+          )))
 (global-set-key (kbd ",")
                 #'(lambda ()
                     (interactive)
@@ -84,8 +100,12 @@
 (map! "C-c j" 'org-capture
       "C-c a" 'org-agenda
       "C-c l" 'org-store-link
+      "C-c C-j" 'org-journal-new-entry
       )
+(map! "C-c k" 'pangu-spacing-space-current-buffer)
 #+END_SRC
+
+#+RESULTS:
 
 ** popup
 #+BEGIN_SRC elisp
@@ -238,7 +258,9 @@ same directory as the org-buffer and insert a link to this file."
 (package! sdcv)
 (package! emojify)
 (package! theme-changer)
+(package! org-journal)
 #+END_SRC
+
 
 ** rime
 #+BEGIN_SRC elisp

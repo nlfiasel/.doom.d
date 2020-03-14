@@ -26,6 +26,9 @@ define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
 })
 
 define_keymap(None, {
+    K("RC-KEY_1"): K("F1"),
+    K("RC-KEY_2"): K("F2"),
+    K("RC-KEY_3"): K("F3"),
     K("RC-KEY_4"): K("F4"),
     K("RC-KEY_5"): K("F5"),
     K("RC-KEY_6"): K("F6"),
@@ -41,6 +44,9 @@ define_keymap(None, {
     K("RC-RIGHT_BRACE"): K("VOLUMEUP"),
     K("RC-BACKSLASH"): K("PRINT"),
     K("RC-APOSTROPHE"): K("CAPSLOCK"),
+    K("RC-U"): K("PREVIOUSSONG"),
+    K("RC-I"): K("PLAYPAUSE"),
+    K("RC-O"): K("NEXTSONG"),
 
     K("RC-H"): K("LEFT"),
     K("RC-J"): K("DOWN"),
