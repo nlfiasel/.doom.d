@@ -46,8 +46,8 @@
 
 ** theme
 #+BEGIN_SRC elisp
-(setq doom-theme 'doom-dracula)
-(setq doom-dark+-blue-modeline t)
+;; (setq doom-theme 'doom-dracula)
+;; (setq doom-dark+-blue-modeline t)
 #+END_SRC
 
 ** sdcv
@@ -165,10 +165,16 @@ same directory as the org-buffer and insert a link to this file."
 (setq tramp-ssh-controlmaster-options
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
+** posframe
+#+BEGIN_SRC elisp
+(use-package! posframe
+  :defer 15)
+
+#+END_SRC
 ** eaf
 #+BEGIN_SRC elisp
 (use-package! eaf
-  :after evil
+  :defer 60
   :custom
   (eaf-find-alternate-file-in-dired t)
   :config
@@ -226,6 +232,7 @@ same directory as the org-buffer and insert a link to this file."
 ** google-translate
 #+BEGIN_SRC elisp
 (use-package! google-translate
+  :defer 3
   :config
   (when (and (string-match "0.11.18"
                            (google-translate-version))
@@ -257,7 +264,6 @@ same directory as the org-buffer and insert a link to this file."
 ;; -*- no-byte-compile: t; -*-
 (package! sdcv)
 (package! emojify)
-(package! theme-changer)
 (package! org-journal)
 #+END_SRC
 
@@ -280,6 +286,7 @@ same directory as the org-buffer and insert a link to this file."
 ** posframe
 #+BEGIN_SRC elisp
 (package! posframe
+  :disable t
   :recipe (:host github
                  :repo "tumashu/posframe"
                  :files ("*")))
