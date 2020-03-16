@@ -19,30 +19,25 @@
 
 ** transparency
 #+BEGIN_SRC elisp
-(set-frame-parameter (selected-frame) 'alpha '(96 . 96))
-(add-to-list 'default-frame-alist '(alpha . (96 . 96)))
-(defun toggle-transparency ()
-  (interactive)
-  (let ((alpha (frame-parameter nil 'alpha)))
-    (set-frame-parameter
-     nil 'alpha
-     (if (eql (cond ((numberp alpha) alpha)
-                    ((numberp (cdr alpha)) (cdr alpha))
-                    ((numberp (cadr alpha)) (cadr alpha)))
-              100)
-         '(96 . 96) '(100 . 100)))))
-(map! "C-c t" 'toggle-transparency)
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+(defun transparency (value)
+  (interactive (list (read-number "Transparency Value 0 - 100 opaque: " 100)))
+  (set-frame-parameter (selected-frame) 'alpha value))
+(map! "C-c t" 'transparency)
 #+END_SRC
 
 ** self
 (native-compile-async "~/.emacs.d/.local/straight/build/" 2 t)
 #+BEGIN_SRC elisp
-(map! "C-x C-b" 'switch-to-buffer)
-(map! "C-x b" '+ivy/switch-workspace-buffer)
+(map! "C-x b" 'switch-to-buffer)
+(map! "C-x C-b" '+ivy/switch-workspace-buffer)
 (map! "C-x C-o" 'ace-window)
 (global-visual-line-mode)
 (setq display-line-numbers-type 'visual)
 #+END_SRC
+
+#+RESULTS:
+: visual
 
 ** theme
 #+BEGIN_SRC elisp
