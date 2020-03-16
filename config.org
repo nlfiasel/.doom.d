@@ -7,6 +7,11 @@
 :header-args: :tangle config.el
 :END:
 
+** hook
+#+BEGIN_SRC elisp
+(add-hook! 'python-shell-send-buffer 'comint-clear-buffer)
+#+END_SRC
+
 ** font
 #+BEGIN_SRC elisp
 (setq doom-font (font-spec :family "Fira Mono" :size 17))
@@ -41,8 +46,7 @@
 
 ** theme
 #+BEGIN_SRC elisp
-;; (setq doom-theme 'doom-dracula)
-;; (setq doom-dark+-blue-modeline t)
+(setq doom-theme 'doom-dark+)
 #+END_SRC
 
 ** sdcv
