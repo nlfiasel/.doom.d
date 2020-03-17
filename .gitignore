@@ -1,6 +1,6 @@
 /*.el
 /*.elc
-!/init.el
-/.auctex-auto/*
+/.auctex-auto*
 /dot/rime/build
-/dot/rime/luna_pinyin.userdb
+/dot/rime/luna_pinyin.userdb*
+!/init.el

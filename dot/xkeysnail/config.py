@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
+import shlex
 from xkeysnail.transform import *
 
+def cycle(app):
+    _cycle = "bash /home/nlfiasel/.doom.d/dot/wmctrl/cycle "
+    return shlex.split(_cycle+app)
+    
 define_timeout(0.3)
 
 define_modmap({
@@ -55,20 +60,21 @@ define_keymap(None, {
     K("RC-K"): K("UP"),
     K("RC-L"): K("RIGHT"),
 
-    K("LC-RC-H"): K("LC-LEFT"),
-    K("LC-RC-J"): K("LC-DOWN"),
-    K("LC-RC-K"): K("LC-UP"),
-    K("LC-RC-L"): K("LC-RIGHT"),
+    K("RC-LC-H"): K("LC-LEFT"),
+    K("RC-LC-J"): K("LC-DOWN"),
+    K("RC-LC-K"): K("LC-UP"),
+    K("RC-LC-L"): K("LC-RIGHT"),
 
-    K("LC-RC-LM-KEY_1"): K("LC-LM-F1"),
-    K("LC-RC-LM-KEY_2"): K("LC-LM-F2"),
-    K("LC-RC-LM-KEY_3"): K("LC-LM-F3"),
+    K("RC-LC-LM-KEY_1"): K("LC-LM-F1"),
+    K("RC-LC-LM-KEY_2"): K("LC-LM-F2"),
+    K("RC-LC-LM-KEY_3"): K("LC-LM-F3"),
 
-    K("RC-D"): launch(["wmctrl", "-xa", "dolphin"]),
-    K("RC-E"): launch(["wmctrl", "-xa", "emacs"]),
-    K("RC-S"): launch(["wmctrl", "-xa", "mplayer"]),
-    K("RC-T"): launch(["wmctrl", "-xa", "telegram"]),
-    K("RC-W"): launch(["wmctrl", "-xa", "chromium"]),
+    K("RC-D"): launch(cycle("dolphin")),
+    K("RC-E"): launch(cycle("emacs")),
+    K("RC-R"): launch(cycle("konsole")),
+    K("RC-S"): launch(cycle("mpv")),
+    K("RC-T"): launch(cycle("telegram")),
+    K("RC-W"): launch(cycle("chromium")),
 })
 
 define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
