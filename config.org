@@ -51,12 +51,15 @@
 
 ** sdcv
 #+BEGIN_SRC elisp
-(set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t)
+(set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
 (setq sdcv-dictionary-complete-list
       '("朗道英汉字典5.0"
         "朗道汉英字典5.0"))
 (map! :leader :m "d" 'sdcv-search-pointer)
 #+END_SRC
+
+#+RESULTS:
+: sdcv-search-pointer
 
 ** org
 #+BEGIN_SRC elisp

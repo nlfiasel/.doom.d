@@ -61,4 +61,17 @@ define_keymap(None, {
     K("LC-RC-LM-KEY_1"): K("LC-LM-F1"),
     K("LC-RC-LM-KEY_2"): K("LC-LM-F2"),
     K("LC-RC-LM-KEY_3"): K("LC-LM-F3"),
+
+    K("RC-D"): launch(["wmctrl", "-xa", "dolphin"]),
+    K("RC-E"): launch(["wmctrl", "-xa", "emacs"]),
+    K("RC-M"): launch(["wmctrl", "-xa", "mplayer"]),
+    K("RC-T"): launch(["wmctrl", "-xa", "telegram"]),
+    K("RC-W"): launch(["wmctrl", "-xa", "chromium"]),
+})
+
+define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
+    K("LC-H"): K("LEFT"),
+    K("LC-J"): K("DOWN"),
+    K("LC-K"): K("UP"),
+    K("LC-L"): K("RIGHT"),
 })
