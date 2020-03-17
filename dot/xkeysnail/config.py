@@ -15,6 +15,7 @@ define_multipurpose_modmap({
     Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
+    Key.GRAVE: [Key.GRAVE, Key.LEFT_META],
 })
 
 define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
@@ -23,6 +24,7 @@ define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
     Key.LEFT_SHIFT: [Key.F13, Key.LEFT_SHIFT],
+    Key.GRAVE: [Key.GRAVE, Key.LEFT_META],
 })
 
 define_keymap(None, {
@@ -64,7 +66,7 @@ define_keymap(None, {
 
     K("RC-D"): launch(["wmctrl", "-xa", "dolphin"]),
     K("RC-E"): launch(["wmctrl", "-xa", "emacs"]),
-    K("RC-M"): launch(["wmctrl", "-xa", "mplayer"]),
+    K("RC-S"): launch(["wmctrl", "-xa", "mplayer"]),
     K("RC-T"): launch(["wmctrl", "-xa", "telegram"]),
     K("RC-W"): launch(["wmctrl", "-xa", "chromium"]),
 })

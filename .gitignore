@@ -2,3 +2,5 @@
 /*.elc
 !/init.el
 /.auctex-auto/*
+/dot/rime/build
+/dot/rime/luna_pinyin.userdb
