@@ -14,7 +14,27 @@
 
 ** font
 #+BEGIN_SRC elisp
-(setq doom-font (font-spec :family "Fira Mono" :size 17))
+(defun +my/better-font()
+  (interactive)
+  ;; english font
+  (if (display-graphic-p)
+      (progn
+        (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Fira Code" 17)) ;; 11 13 17 19 23
+        ;; chinese font
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+          (set-fontset-font (frame-parameter nil 'font)
+                            charset
+                            (font-spec :family "Sarasa Mono SC")))) ;; 14 16 20 22 28
+    ))
+
+(defun +my|init-font(frame)
+  (with-selected-frame frame
+    (if (display-graphic-p)
+        (+my/better-font))))
+
+(if (and (fboundp 'daemonp) (daemonp))
+    (add-hook 'after-make-frame-functions #'+my|init-font)
+  (+my/better-font))
 #+END_SRC
 
 ** quit
@@ -28,7 +48,6 @@
 (defun transparency (value)
   (interactive (list (read-number "Transparency Value 0 - 100 opaque: " 100)))
   (set-frame-parameter (selected-frame) 'alpha value))
-(map! "C-c t" 'transparency)
 #+END_SRC
 
 ** self
@@ -55,7 +74,6 @@
 (setq sdcv-dictionary-complete-list
       '("朗道英汉字典5.0"
         "朗道汉英字典5.0"))
-(map! :leader :m "d" 'sdcv-search-pointer)
 #+END_SRC
 
 #+RESULTS:
@@ -99,12 +117,6 @@
                              (300 600 900 1200 1500 1800 2100 2400)
                              "......" "----------------"))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-(map! "C-c j" 'org-capture
-      "C-c a" 'org-agenda
-      "C-c l" 'org-store-link
-      "C-c C-j" 'org-journal-new-entry
-      )
-(map! "C-c k" 'pangu-spacing-space-current-buffer)
 #+END_SRC
 
 #+RESULTS:
@@ -143,15 +155,12 @@ same directory as the org-buffer and insert a link to this file."
 (defun dir-org ()
   (interactive)
   (+lookup/file "~/Dropbox/org"))
-(map! "C-c o" 'dir-org)
 (defun dir-emacs ()
   (interactive)
   (+lookup/file "~/.emacs.d"))
-(map! "C-c e" 'dir-emacs)
 (defun dir-emacs-repos ()
   (interactive)
   (+lookup/file "~/.emacs.d/.local/straight/repos"))
-(map! "C-c d" 'dir-emacs-repos)
 #+END_SRC
 
 ** evil
@@ -246,7 +255,6 @@ same directory as the org-buffer and insert a link to this file."
       ;; TKK='427110.1469889687'
       (list 427110 1469889687)))
   )
-(map! :leader :m "j" 'google-translate-at-point)
 (setq google-translate-base-url
       "http://translate.google.cn/translate_a/single")
 (setq google-translate--tkk-url
@@ -258,6 +266,41 @@ same directory as the org-buffer and insert a link to this file."
 (setq google-translate-default-source-language "en")
 (setq google-translate-default-target-language "zh-CN")
 #+END_SRC
+
+#+RESULTS:
+: zh-CN
+
+** key
+#+BEGIN_SRC elisp
+(setq evil-move-beyond-eol t)
+(defun just/org-time-stamp ()
+  (interactive)
+  (let ((current-prefix-arg 4))
+    (call-interactively 'org-time-stamp)
+    ))
+(map! :leader
+      (:prefix ("j" . "just")
+        "d" 'dir-emacs-repos
+        "e" 'dir-emacs
+        "I" 'org-time-stamp
+        "i" 'just/org-time-stamp
+        "j" 'sdcv-search-pointer
+        "J" 'sdcv-search-input
+        "k" 'pangu-spacing-space-current-buffer
+        "o" 'dir-org
+        "g" 'google-translate-at-point
+        "G" 'google-translate-at-point-reverse
+        "t" 'transparency
+        ))
+(map! "C-c j" 'org-capture
+      "C-c a" 'org-agenda
+      "C-c l" 'org-store-link
+      "C-c C-j" 'org-journal-new-entry
+      )
+#+END_SRC
+
+#+RESULTS:
+
 * package
 :PROPERTIES:
 :header-args: :tangle packages.el

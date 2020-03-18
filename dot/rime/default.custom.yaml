@@ -1,5 +1,5 @@
 patch:
   menu:
-    page_size: 100
+    page_size: 200
   schema_list :
     - schema : double_pinyin_flypy   #小鹤双拼
