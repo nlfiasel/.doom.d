@@ -71,10 +71,12 @@ define_keymap(None, {
 
     K("RC-D"): launch(cycle("dolphin")),
     K("RC-E"): launch(cycle("emacs")),
+    K("RC-Q"): launch(cycle("mendeley")),
     K("RC-R"): launch(cycle("konsole")),
     K("RC-S"): launch(cycle("mpv")),
     K("RC-T"): launch(cycle("telegram")),
     K("RC-W"): launch(cycle("chromium")),
+
 })
 
 define_keymap(lambda wm_class: wm_class not in ("Emacs"), {

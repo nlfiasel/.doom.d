@@ -70,14 +70,12 @@
 
 ** sdcv
 #+BEGIN_SRC elisp
+(set-evil-initial-state! 'sdcv-mode 'emacs)
 (set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
 (setq sdcv-dictionary-complete-list
       '("朗道英汉字典5.0"
         "朗道汉英字典5.0"))
 #+END_SRC
-
-#+RESULTS:
-: sdcv-search-pointer
 
 ** org
 #+BEGIN_SRC elisp
@@ -142,14 +140,10 @@ same directory as the org-buffer and insert a link to this file."
   (call-process-shell-command (concat "xclip -selection clipboard -t image/png -o > " filename))
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
-(map! "C-c i" 'org-insert-clipboard-image)
 (after! org
   (setq org-image-actual-width (/ (display-pixel-width) 3)))
 #+END_SRC
-** modeline
-#+BEGIN_SRC elisp
-(map! "C-c h" 'hide-mode-line-mode)
-#+END_SRC
+
 ** dir
 #+BEGIN_SRC elisp
 (defun dir-org ()
@@ -195,8 +189,6 @@ same directory as the org-buffer and insert a link to this file."
   (defun eaf-org-open-file (file &optional link)
     (eaf-open file))
 
-  (map! "C-c b" 'eaf-open-browser)
-  (map! "C-c s" 'eaf-open-browser-with-history)
 
   (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
   (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
@@ -256,11 +248,11 @@ same directory as the org-buffer and insert a link to this file."
       (list 427110 1469889687)))
   )
 (setq google-translate-base-url
-      "http://translate.google.cn/translate_a/single")
+      "https://translate.google.cn/translate_a/single")
 (setq google-translate--tkk-url
-      "http://translate.google.cn/")
+      "https://translate.google.cn/")
 (setq google-translate-listen-url
-      "http://translate.google.cn/translate_tts")
+      "https://translate.google.cn/translate_tts")
 (setq google-translate-backend-method 'curl)
 (setq google-translate-pop-up-buffer-set-focus t)
 (setq google-translate-default-source-language "en")
@@ -270,24 +262,33 @@ same directory as the org-buffer and insert a link to this file."
 #+RESULTS:
 : zh-CN
 
+** latex
+#+BEGIN_SRC elisp
+(setq org-latex-to-mathml-convert-command
+                "java -jar %j -unicode -force -df %o %I"
+                org-latex-to-mathml-jar-file
+                "~/.doom.d/dot/latex/mathtoweb.jar")
+#+END_SRC
+
 ** key
 #+BEGIN_SRC elisp
 (setq evil-move-beyond-eol t)
 (defun just/org-time-stamp ()
   (interactive)
   (let ((current-prefix-arg 4))
-    (call-interactively 'org-time-stamp)
-    ))
+    (call-interactively 'org-time-stamp)))
 (map! :leader
       (:prefix ("j" . "just")
+        "c" 'org-insert-clipboard-image
         "d" 'dir-emacs-repos
         "e" 'dir-emacs
         "I" 'org-time-stamp
         "i" 'just/org-time-stamp
         "j" 'sdcv-search-pointer
         "J" 'sdcv-search-input
-        "k" 'pangu-spacing-space-current-buffer
+        "n" 'org-journal-new-entry
         "o" 'dir-org
+        "p" 'pangu-spacing-space-current-buffer
         "g" 'google-translate-at-point
         "G" 'google-translate-at-point-reverse
         "t" 'transparency
@@ -295,7 +296,6 @@ same directory as the org-buffer and insert a link to this file."
 (map! "C-c j" 'org-capture
       "C-c a" 'org-agenda
       "C-c l" 'org-store-link
-      "C-c C-j" 'org-journal-new-entry
       )
 #+END_SRC
 
