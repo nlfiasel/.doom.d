@@ -3,9 +3,12 @@ import re
 import shlex
 from xkeysnail.transform import *
 
-def E(sh, arg):
+def E(sh, arg=None):
     loc = "bash /home/nlfiasel/.doom.d/dot/xkeysnail/"
-    return shlex.split(loc+sh+" "+arg)
+    if arg is None:
+        return shlex.split(sh)
+    else:
+        return shlex.split(loc+sh+" "+arg)
     
 define_timeout(0.3)
 
@@ -76,6 +79,8 @@ define_keymap(None, {
     K("RC-S"): launch(E("cycle", "mpv")),
     K("RC-T"): launch(E("cycle", "telegram")),
     K("RC-W"): launch(E("cycle", "chromium")),
+
+    K("RC-C"): launch(E("capture", "")),
 
     K("RC-I"): launch(E("ipstatus", "enp0s20f0u1")),
     K("RC-Shift-I"): launch(E("iplink", "enp0s20f0u1")),

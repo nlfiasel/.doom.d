@@ -2,7 +2,9 @@
 ip_set=$1
 ip_dev=$(ip link show dev $ip_set | grep '^[0-9]' | awk '{print $3}' | grep 'UP')
 if [ ! -n "$ip_dev" ]; then
+    kdialog --title "$ip_set: " --passivepopup "正在打开连接" 1
     ip link set $ip_set up
 else
+    kdialog --title "$ip_set: " --passivepopup "正在关闭连接" 1
     ip link set $ip_set down
 fi

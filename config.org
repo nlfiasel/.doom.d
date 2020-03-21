@@ -99,6 +99,7 @@
                                (300 600 900 1200 1500 1800 2100 2400)
                                "......" "----------------"))
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+)
 #+END_SRC
 
 
@@ -110,29 +111,16 @@
         +org-capture-notes-file "inbox.org"
         org-capture-templates
         `(
+;; 目前确认已经使用的
+          ("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Inbox")
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Inbox")
+           "* %? [[%:link][%:description]] \nCaptured On: %U")
+
+
           ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
            "* %?\n  %i\n  %a")
-          ("GSA" "General Skim Annotation" entry
-           (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
-           "* %^{Logging for...} :skim_annotation:read:
-:PROPERTIES:
-:Created: %U
-:SKIM_NOTE: %(+org-reference-skim-get-annotation)
-:SKIM_PAGE: %(+org-reference-get-skim-page-number)
-:END:
-%i
-%?")
-          ("SA" "Skim Annotation" entry
-           (file+function org-ref-bibliography-notes +org-reference-org-move-point-to-capture-skim-annotation)
-           "* %^{Logging for...} :skim_annotation:read:literature:
-:PROPERTIES:
-:Created: %U
-:CITE: cite:%(+org-reference-skim-get-bibtex-key)
-:SKIM_NOTE: %(+org-reference-skim-get-annotation)
-:SKIM_PAGE: %(+org-reference-get-skim-page-number)
-:END:
-%i
-%?")
+
           ("t" "Todo" entry
            (file ,(concat org-directory "inbox.org"))
            "* %^{Logging for...}
@@ -141,6 +129,8 @@
 :END:
 %i
 %?")
+
+
           ("tl" "Todo with link" entry
            (file ,(concat org-directory "inbox.org"))
            "* %^{Logging for...}
@@ -159,39 +149,6 @@
 :END:
 %i
 %?")
-          ("j" "Journal" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :logs:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
-          ("M" "Meeting" entry
-           (file+olp+datetree ,(concat org-directory "meeting.org"))
-           "* %^{Logging for...} :logs:communication:
-%^{Effort}p
-%i
-%?" :clock-in t)
-          ("m" "Meeting Minutes" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :logs:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
-          ("u" "Write-up" entry
-           #'+org-move-point-to-heading
-           "* %^{Logging for...} :writeup:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?" :clock-in t)
           ("i" "Idea" entry
            (file ,(concat org-directory "idea.org"))
            "* %A :idea:
@@ -201,37 +158,12 @@
 :END:
 %i
 %?")
-          ("drl" "Daily Review with link" entry
-           (file+olp+datetree ,(concat org-directory "review.org"))
-           "* %^{Review} :review:daily:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%?" :time-prompt t)
-          ("dr" "Daily Review" entry
-           (file+olp+datetree ,(concat org-directory "review.org"))
-           "* %^{Review} :review:daily:
-:PROPERTIES:
-:Created: %U
-:END:
-%?" :time-prompt t)
-          ("wr" "Week Review" entry
-           (file+olp+datetree ,(concat org-directory "review.org"))
-           "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
-:PROPERTIES:
-:Created: %U
-:END:
-%?" :time-prompt t)
-          ("mr" "Month Review" entry
-           (file+olp+datetree ,(concat org-directory "review.org"))
-           "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
-:PROPERTIES:
-:Created: %U
-:END:
-%?" :time-prompt t)))
-  )
+
+          )))
 #+END_SRC
+
+#+RESULTS:
+| p | Protocol | entry | (file+headline ~/Dropbox/org/inbox.org Inbox) | * %^{Title} |
 
 ** popup
 #+BEGIN_SRC elisp
@@ -313,7 +245,6 @@ same directory as the org-buffer and insert a link to this file."
   (eaf-setq eaf-browser-enable-javascript "true")
   (eaf-setq eaf-browser-default-zoom "1.25")
 
-  (setq browse-url-browser-function 'eaf-open-browser)
   (defalias 'browse-web #'eaf-open-browser))
 #+END_SRC
 
@@ -391,31 +322,39 @@ same directory as the org-buffer and insert a link to this file."
   (interactive)
   (let ((current-prefix-arg 4))
     (call-interactively 'org-time-stamp)))
+(defun just/eaf-browser ()
+  (interactive)
+  (setq browse-url-browser-function 'eaf-open-browser))
+(defun just/xdg-browser ()
+  (interactive)
+  (setq browse-url-browser-function 'browse-url-chromium))
+
 (map! :leader
       (:prefix ("j" . "just")
         "b" 'eaf-open-browser-with-history
         "B" 'eaf-open-browser
-        "c" 'org-insert-clipboard-image
+        "c" 'just/xdg-browser
+        "C" 'just/eaf-browser
         "d" 'dir-emacs-repos
         "e" 'dir-emacs
-        "I" 'org-time-stamp
-        "i" 'just/org-time-stamp
+        "g" 'google-translate-at-point
+        "G" 'google-translate-at-point-reverse
+        "i" 'org-insert-clipboard-image
         "j" 'sdcv-search-pointer
         "J" 'sdcv-search-input
+        "k" 'org-capture
+        "K" 'org-agenda
         "n" 'org-journal-new-entry
         "o" 'dir-org
         "p" 'pangu-spacing-space-current-buffer
-        "g" 'google-translate-at-point
-        "G" 'google-translate-at-point-reverse
+        "s" 'just/org-time-stamp
+        "S" 'org-time-stamp
         "t" 'transparency
         ))
-(map! "C-c j" 'org-capture
-      "C-c a" 'org-agenda
-      "C-c l" 'org-store-link
-      )
 #+END_SRC
 
 #+RESULTS:
+: transparency
 
 * package
 :PROPERTIES:
