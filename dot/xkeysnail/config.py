@@ -58,11 +58,6 @@ define_keymap(None, {
     K("RC-I"): K("PLAYPAUSE"),
     K("RC-O"): K("NEXTSONG"),
 
-    K("RC-H"): K("LEFT"),
-    K("RC-J"): K("DOWN"),
-    K("RC-K"): K("UP"),
-    K("RC-L"): K("RIGHT"),
-
     K("RC-LC-H"): K("LC-LEFT"),
     K("RC-LC-J"): K("LC-DOWN"),
     K("RC-LC-K"): K("LC-UP"),
@@ -93,4 +88,10 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
     K("LC-J"): K("DOWN"),
     K("LC-K"): K("UP"),
     K("LC-L"): K("RIGHT"),
+})
+
+
+define_keymap(lambda wm_class: wm_class in ("Chromium"), {
+    K("RC-J"): K("Shift-J"),
+    K("RC-K"): K("Shift-K"),
 })

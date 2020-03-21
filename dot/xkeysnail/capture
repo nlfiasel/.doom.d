@@ -2,8 +2,8 @@
 
 xdotool mousemove 1820 55
 xdotool click 1
+xdotool sleep 0.6
 xdotool mousemove 1095 195
-xdotool sleep 1
 xdotool click 1
 xdotool mousemove 1920 1080
 wmctrl -x -a "emacs"

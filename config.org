@@ -78,92 +78,46 @@
 
 ** org
 #+BEGIN_SRC elisp
-(setq org-directory "~/Dropbox/org"
-      org-journal-dir "~/Dropbox/org/journal/"
-      org-journal-date-format "%A, %d %B %Y"
-      org-journal-enable-agenda-integration t
-      org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
-      )
-(after! org
-  (setq org-directory "~/Dropbox/org/"
-        org-journal-dir "~/Dropbox/org/journal/"
-        org-journal-date-format "%A, %d %B %Y"
-        org-journal-enable-agenda-integration t
-        org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
-        )
-  (global-set-key (kbd ",")
-                  #'(lambda ()
-                      (interactive)
-                      (insert ", ")))
-  (setq org-agenda-time-grid '((daily today require-timed)
-                               (300 600 900 1200 1500 1800 2100 2400)
-                               "......" "----------------"))
-  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-)
-#+END_SRC
-
-
-#+BEGIN_SRC elisp
+(setq org-directory "~/Dropbox/org/")
+(global-set-key (kbd ",")
+                #'(lambda ()
+                    (interactive)
+                    (insert ", ")))
+(setq org-agenda-time-grid '((daily today require-timed)
+                             (300 600 900 1200 1500 1800 2100 2400)
+                             "......" "----------------"))
 (after! org-capture
   (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
+  (setq org-capture-templates nil)
   (setq org-default-notes-file "inbox.org"
-        +org-capture-todo-file "inbox.org"
-        +org-capture-notes-file "inbox.org"
         org-capture-templates
         `(
-;; 目前确认已经使用的
-          ("p" "Protocol" entry (file+headline ,(concat org-directory "inbox.org") "Inbox")
+          ("p" "Protocol")
+          ("pp" "Protocol Page" entry (file+olp ,(concat org-directory "inbox.org") "Inbox" "Page")
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-          ("L" "Protocol Link" entry (file+headline ,(concat org-directory "inbox.org") "Inbox")
+          ("pL" "Protocol Link" entry (file+olp ,(concat org-directory "inbox.org") "Inbox" "Link")
            "* %? [[%:link][%:description]] \nCaptured On: %U")
 
-
-          ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
+          ("n" "Notes")
+          ("nm" "ML" entry (file+olp ,(concat org-directory "inbox.org") "Notes" "ML")
            "* %?\n  %i\n  %a")
 
-          ("t" "Todo" entry
+          ("j" "Journal")
+          ("jj" "Journal_O" entry (file+datetree ,(concat org-directory "journal.org"))
+           "* %U - %^{heading} \n %?\n")
+          ("jk" "Journal_T" entry (file+datetree ,(concat org-directory "journal.org"))
+           "* %U - %^{heading} \n%T\n %?\n")
+
+          ("t" "Todo")
+          ("tt" "Todo" entry
            (file ,(concat org-directory "inbox.org"))
-           "* %^{Logging for...}
-:PROPERTIES:
-:Created: %U
-:END:
-%i
-%?")
-
-
+           "* %^{Logging for...}\n:PROPERTIES:\n:Created: %U\n:END:\n%i\n%?")
           ("tl" "Todo with link" entry
            (file ,(concat org-directory "inbox.org"))
-           "* %^{Logging for...}
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?")
-          ("ic" "Idea from Chrome" entry
-           (file ,(concat org-directory "idea.org"))
-           "* %^{Logging for...} :idea:
-:PROPERTIES:
-:Created: %U
-:Linked: %(org-mac-chrome-get-frontmost-url)
-:END:
-%i
-%?")
-          ("i" "Idea" entry
-           (file ,(concat org-directory "idea.org"))
-           "* %A :idea:
-:PROPERTIES:
-:Created: %U
-:Linked: %a
-:END:
-%i
-%?")
+           "* %^{Logging for...}\n:PROPERTIES:\n:Created: %U\n:Linked: %a\n:END:\n%i\n%?")
 
           )))
 #+END_SRC
-
-#+RESULTS:
-| p | Protocol | entry | (file+headline ~/Dropbox/org/inbox.org Inbox) | * %^{Title} |
 
 ** popup
 #+BEGIN_SRC elisp
@@ -365,9 +319,7 @@ same directory as the org-buffer and insert a link to this file."
 ;; -*- no-byte-compile: t; -*-
 (package! sdcv)
 (package! emojify)
-(package! org-journal)
 #+END_SRC
-
 
 ** rime
 #+BEGIN_SRC elisp
