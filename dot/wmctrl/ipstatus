@@ -1,0 +1,8 @@
+#!/bin/bash
+ip_set=$1
+ip_dev=$(ip link show dev $ip_set | grep '^[0-9]' | awk '{print $3}' | grep 'UP')
+if [ ! -n "$ip_dev" ]; then
+    kdialog --title "ipstate $ip_set: " --passivepopup "处于断开状态" 1
+else
+    kdialog --title "ipstate $ip_set: " --passivepopup "处于连接状态" 1
+fi

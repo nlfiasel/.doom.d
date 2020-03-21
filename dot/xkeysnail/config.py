@@ -3,9 +3,9 @@ import re
 import shlex
 from xkeysnail.transform import *
 
-def cycle(app):
-    _cycle = "bash /home/nlfiasel/.doom.d/dot/wmctrl/cycle "
-    return shlex.split(_cycle+app)
+def E(sh, arg):
+    loc = "bash /home/nlfiasel/.doom.d/dot/wmctrl/"
+    return shlex.split(loc+sh+" "+arg)
     
 define_timeout(0.3)
 
@@ -69,14 +69,18 @@ define_keymap(None, {
     K("RC-LC-LM-KEY_2"): K("LC-LM-F2"),
     K("RC-LC-LM-KEY_3"): K("LC-LM-F3"),
 
-    K("RC-D"): launch(cycle("dolphin")),
-    K("RC-E"): launch(cycle("emacs")),
-    K("RC-Q"): launch(cycle("mendeley")),
-    K("RC-R"): launch(cycle("konsole")),
-    K("RC-S"): launch(cycle("mpv")),
-    K("RC-T"): launch(cycle("telegram")),
-    K("RC-W"): launch(cycle("chromium")),
+    K("RC-D"): launch(E("cycle", "dolphin")),
+    K("RC-E"): launch(E("cycle", "emacs")),
+    K("RC-Q"): launch(E("cycle", "mendeley")),
+    K("RC-R"): launch(E("cycle", "konsole")),
+    K("RC-S"): launch(E("cycle", "mpv")),
+    K("RC-T"): launch(E("cycle", "telegram")),
+    K("RC-W"): launch(E("cycle", "chromium")),
 
+    K("RC-I"): launch(E("ipstatus", "enp0s20f0u1")),
+    K("RC-Shift-I"): launch(E("iplink", "enp0s20f0u1")),
+    K("RC-O"): launch(E("ipstatus", "wlp58s0")),
+    K("RC-Shift-O"): launch(E("iplink", "wlp58s0")),
 })
 
 define_keymap(lambda wm_class: wm_class not in ("Emacs"), {

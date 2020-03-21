@@ -6,7 +6,6 @@
 :PROPERTIES:
 :header-args: :tangle config.el
 :END:
-
 ** hook
 #+BEGIN_SRC elisp
 (add-hook! 'python-shell-send-buffer 'comint-clear-buffer)
@@ -79,13 +78,6 @@
 
 ** org
 #+BEGIN_SRC elisp
-(defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
-  (org-journal-new-entry t)
-  ;; Position point on the journal's top-level heading so that org-capture
-  ;; will add the new entry as a child entry.
-  (goto-char (point-min)))
 (setq org-directory "~/Dropbox/org"
       org-journal-dir "~/Dropbox/org/journal/"
       org-journal-date-format "%A, %d %B %Y"
@@ -93,31 +85,153 @@
       org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
       )
 (after! org
-  (setq org-directory "~/Dropbox/org"
+  (setq org-directory "~/Dropbox/org/"
         org-journal-dir "~/Dropbox/org/journal/"
         org-journal-date-format "%A, %d %B %Y"
         org-journal-enable-agenda-integration t
         org-agenda-files (ignore-errors (directory-files org-directory t "^\\(.*\\|ref\\)\\.org$" t))
         )
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/Dropbox/org/gtd.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
-          ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
-           "* %?\n  %i\n  %a")
-          ("j" "Journal entry" entry (function org-journal-find-location)
-           "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
-          )))
-(global-set-key (kbd ",")
-                #'(lambda ()
-                    (interactive)
-                    (insert ", ")))
-(setq org-agenda-time-grid '((daily today require-timed)
-                             (300 600 900 1200 1500 1800 2100 2400)
-                             "......" "----------------"))
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+  (global-set-key (kbd ",")
+                  #'(lambda ()
+                      (interactive)
+                      (insert ", ")))
+  (setq org-agenda-time-grid '((daily today require-timed)
+                               (300 600 900 1200 1500 1800 2100 2400)
+                               "......" "----------------"))
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 #+END_SRC
 
-#+RESULTS:
+
+#+BEGIN_SRC elisp
+(after! org-capture
+  (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
+  (setq org-default-notes-file "inbox.org"
+        +org-capture-todo-file "inbox.org"
+        +org-capture-notes-file "inbox.org"
+        org-capture-templates
+        `(
+          ("h" "Note" entry (file+headline "~/Dropbox/org/note.org" "Notes")
+           "* %?\n  %i\n  %a")
+          ("GSA" "General Skim Annotation" entry
+           (file+function (lambda () (buffer-file-name)) +org-move-point-to-heading)
+           "* %^{Logging for...} :skim_annotation:read:
+:PROPERTIES:
+:Created: %U
+:SKIM_NOTE: %(+org-reference-skim-get-annotation)
+:SKIM_PAGE: %(+org-reference-get-skim-page-number)
+:END:
+%i
+%?")
+          ("SA" "Skim Annotation" entry
+           (file+function org-ref-bibliography-notes +org-reference-org-move-point-to-capture-skim-annotation)
+           "* %^{Logging for...} :skim_annotation:read:literature:
+:PROPERTIES:
+:Created: %U
+:CITE: cite:%(+org-reference-skim-get-bibtex-key)
+:SKIM_NOTE: %(+org-reference-skim-get-annotation)
+:SKIM_PAGE: %(+org-reference-get-skim-page-number)
+:END:
+%i
+%?")
+          ("t" "Todo" entry
+           (file ,(concat org-directory "inbox.org"))
+           "* %^{Logging for...}
+:PROPERTIES:
+:Created: %U
+:END:
+%i
+%?")
+          ("tl" "Todo with link" entry
+           (file ,(concat org-directory "inbox.org"))
+           "* %^{Logging for...}
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?")
+          ("ic" "Idea from Chrome" entry
+           (file ,(concat org-directory "idea.org"))
+           "* %^{Logging for...} :idea:
+:PROPERTIES:
+:Created: %U
+:Linked: %(org-mac-chrome-get-frontmost-url)
+:END:
+%i
+%?")
+          ("j" "Journal" entry
+           #'+org-move-point-to-heading
+           "* %^{Logging for...} :logs:
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?" :clock-in t)
+          ("M" "Meeting" entry
+           (file+olp+datetree ,(concat org-directory "meeting.org"))
+           "* %^{Logging for...} :logs:communication:
+%^{Effort}p
+%i
+%?" :clock-in t)
+          ("m" "Meeting Minutes" entry
+           #'+org-move-point-to-heading
+           "* %^{Logging for...} :logs:
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?" :clock-in t)
+          ("u" "Write-up" entry
+           #'+org-move-point-to-heading
+           "* %^{Logging for...} :writeup:
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?" :clock-in t)
+          ("i" "Idea" entry
+           (file ,(concat org-directory "idea.org"))
+           "* %A :idea:
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%i
+%?")
+          ("drl" "Daily Review with link" entry
+           (file+olp+datetree ,(concat org-directory "review.org"))
+           "* %^{Review} :review:daily:
+:PROPERTIES:
+:Created: %U
+:Linked: %a
+:END:
+%?" :time-prompt t)
+          ("dr" "Daily Review" entry
+           (file+olp+datetree ,(concat org-directory "review.org"))
+           "* %^{Review} :review:daily:
+:PROPERTIES:
+:Created: %U
+:END:
+%?" :time-prompt t)
+          ("wr" "Week Review" entry
+           (file+olp+datetree ,(concat org-directory "review.org"))
+           "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:week:%\\1:
+:PROPERTIES:
+:Created: %U
+:END:
+%?" :time-prompt t)
+          ("mr" "Month Review" entry
+           (file+olp+datetree ,(concat org-directory "review.org"))
+           "* %^{Review for...|Mood|Research|Learn|Entertainment|Life} :review:month:%\\1:
+:PROPERTIES:
+:Created: %U
+:END:
+%?" :time-prompt t)))
+  )
+#+END_SRC
 
 ** popup
 #+BEGIN_SRC elisp
@@ -179,7 +293,7 @@ same directory as the org-buffer and insert a link to this file."
 ** eaf
 #+BEGIN_SRC elisp
 (use-package! eaf
-  :defer 60
+  :defer 6
   :custom
   (eaf-find-alternate-file-in-dired t)
   :config
@@ -279,6 +393,8 @@ same directory as the org-buffer and insert a link to this file."
     (call-interactively 'org-time-stamp)))
 (map! :leader
       (:prefix ("j" . "just")
+        "b" 'eaf-open-browser-with-history
+        "B" 'eaf-open-browser
         "c" 'org-insert-clipboard-image
         "d" 'dir-emacs-repos
         "e" 'dir-emacs
