@@ -4,7 +4,7 @@ import shlex
 from xkeysnail.transform import *
 
 def E(sh, arg):
-    loc = "bash /home/nlfiasel/.doom.d/dot/wmctrl/"
+    loc = "bash /home/nlfiasel/.doom.d/dot/xkeysnail/"
     return shlex.split(loc+sh+" "+arg)
     
 define_timeout(0.3)
