@@ -1,14 +1,24 @@
-#+TITLE: config
-# #+STARTUP: inlineimages
-# #+PROPERTY: header-args :tangle yes :cache yes :results silent :padline no
-
 * config
 :PROPERTIES:
 :header-args: :tangle config.el
 :END:
-** hook
+** header
+(native-compile-async "~/.emacs.d/.local/straight/build/" 2 t)
 #+BEGIN_SRC elisp
-(add-hook! 'python-shell-send-buffer 'comint-clear-buffer)
+(map! "C-x b" 'switch-to-buffer)
+(map! "C-x C-b" '+ivy/switch-workspace-buffer)
+(map! "C-x C-o" 'ace-window)
+(global-visual-line-mode)
+(setq confirm-kill-emacs nil)
+(setq display-line-numbers-type 'visual)
+(setq doom-theme 'doom-dark+)
+(setq evil-escape-key-sequence nil)
+(use-package! posframe :defer 15)
+(setq evil-move-beyond-eol t)
+(global-set-key (kbd ",")
+                #'(lambda () (interactive) (insert ", ")))
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+(set-popup-rule! "*lsp-help*" :side 'bottom :size 60 :modeline nil :select nil :quit t)
 #+END_SRC
 
 ** font
@@ -36,56 +46,23 @@
   (+my/better-font))
 #+END_SRC
 
-** quit
-#+BEGIN_SRC elisp
-(setq confirm-kill-emacs nil)
-#+END_SRC
-
-** transparency
-#+BEGIN_SRC elisp
-(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
-(defun transparency (value)
-  (interactive (list (read-number "Transparency Value 0 - 100 opaque: " 100)))
-  (set-frame-parameter (selected-frame) 'alpha value))
-#+END_SRC
-
-** self
-(native-compile-async "~/.emacs.d/.local/straight/build/" 2 t)
-#+BEGIN_SRC elisp
-(map! "C-x b" 'switch-to-buffer)
-(map! "C-x C-b" '+ivy/switch-workspace-buffer)
-(map! "C-x C-o" 'ace-window)
-(global-visual-line-mode)
-(setq display-line-numbers-type 'visual)
-#+END_SRC
-
-#+RESULTS:
-: visual
-
-** theme
-#+BEGIN_SRC elisp
-(setq doom-theme 'doom-dark+)
-#+END_SRC
-
 ** sdcv
 #+BEGIN_SRC elisp
 (set-evil-initial-state! 'sdcv-mode 'emacs)
 (set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
 (setq sdcv-dictionary-complete-list
-      '("朗道英汉字典5.0"
-        "朗道汉英字典5.0"))
+      '("朗道英汉字典5.0" "朗道汉英字典5.0"))
 #+END_SRC
 
 ** org
 #+BEGIN_SRC elisp
 (setq org-directory "~/Dropbox/org/")
-(global-set-key (kbd ",")
-                #'(lambda ()
-                    (interactive)
-                    (insert ", ")))
-(setq org-agenda-time-grid '((daily today require-timed)
-                             (300 600 900 1200 1500 1800 2100 2400)
-                             "......" "----------------"))
+(after! org
+  (setq org-image-actual-width (/ (display-pixel-width) 3)))
+(after! org-agenda
+  (setq org-agenda-time-grid '((daily today require-timed)
+                               (300 600 900 1200 1500 1800 2100 2400)
+                               "......" "----------------")))
 (after! org-capture
   (add-hook 'org-capture-prepare-finalize-hook #'counsel-org-tag)
   (setq org-capture-templates nil)
@@ -119,48 +96,6 @@
           )))
 #+END_SRC
 
-** popup
-#+BEGIN_SRC elisp
-(set-popup-rule! "*lsp-help*" :side 'bottom :size 60 :modeline nil :select nil :quit t)
-#+END_SRC
-
-** clipboard
-#+BEGIN_SRC elisp
-(defun org-insert-clipboard-image ()
-  "Take a screenshot into a time stamped unique-named file in the
-same directory as the org-buffer and insert a link to this file."
-  (interactive)
-  (setq filename
-        (concat
-         (make-temp-name
-          (concat "~/Dropbox/org/images/"
-                  (file-name-base buffer-file-name)
-                  "_"
-                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
-  (call-process-shell-command (concat "xclip -selection clipboard -t image/png -o > " filename))
-  (insert (concat "[[" filename "]]"))
-  (org-display-inline-images))
-(after! org
-  (setq org-image-actual-width (/ (display-pixel-width) 3)))
-#+END_SRC
-
-** dir
-#+BEGIN_SRC elisp
-(defun dir-org ()
-  (interactive)
-  (+lookup/file "~/Dropbox/org"))
-(defun dir-emacs ()
-  (interactive)
-  (+lookup/file "~/.emacs.d"))
-(defun dir-emacs-repos ()
-  (interactive)
-  (+lookup/file "~/.emacs.d/.local/straight/repos"))
-#+END_SRC
-
-** evil
-#+BEGIN_SRC elisp
-(setq evil-escape-key-sequence nil)
-#+END_SRC
 ** tramp-zsh
 #+BEGIN_EXAMPLE
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
@@ -169,12 +104,6 @@ same directory as the org-buffer and insert a link to this file."
 #+BEGIN_SRC elisp
 (setq tramp-ssh-controlmaster-options
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-#+END_SRC
-** posframe
-#+BEGIN_SRC elisp
-(use-package! posframe
-  :defer 15)
-
 #+END_SRC
 ** eaf
 #+BEGIN_SRC elisp
@@ -200,11 +129,6 @@ same directory as the org-buffer and insert a link to this file."
   (eaf-setq eaf-browser-default-zoom "1.25")
 
   (defalias 'browse-web #'eaf-open-browser))
-#+END_SRC
-
-** lookup
-#+BEGIN_SRC elisp
-(set-docsets! 'python-mode :add "Python_3")
 #+END_SRC
 
 ** rime
@@ -258,9 +182,6 @@ same directory as the org-buffer and insert a link to this file."
 (setq google-translate-default-target-language "zh-CN")
 #+END_SRC
 
-#+RESULTS:
-: zh-CN
-
 ** latex
 #+BEGIN_SRC elisp
 (setq org-latex-to-mathml-convert-command
@@ -269,9 +190,8 @@ same directory as the org-buffer and insert a link to this file."
                 "~/.doom.d/dot/latex/mathtoweb.jar")
 #+END_SRC
 
-** key
+** defun
 #+BEGIN_SRC elisp
-(setq evil-move-beyond-eol t)
 (defun just/org-time-stamp ()
   (interactive)
   (let ((current-prefix-arg 4))
@@ -282,7 +202,33 @@ same directory as the org-buffer and insert a link to this file."
 (defun just/xdg-browser ()
   (interactive)
   (setq browse-url-browser-function 'browse-url-chromium))
-
+(defun just/org ()
+  (interactive)
+  (+lookup/file "~/Dropbox/org/"))
+(defun just/emacs ()
+  (interactive)
+  (+lookup/file "~/.emacs.d/"))
+(defun just/emacs-repos ()
+  (interactive)
+  (+lookup/file "~/.emacs.d/.local/straight/repos/"))
+(defun just/transparency (value)
+  (interactive (list (read-number "Transparency Value 0 - 100 opaque: " 100)))
+  (set-frame-parameter (selected-frame) 'alpha value))
+(defun org-insert-clipboard-image ()
+  (interactive)
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat "~/Dropbox/org/images/"
+                  (file-name-base buffer-file-name)
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  (call-process-shell-command (concat "xclip -selection clipboard -t image/png -o > " filename))
+  (insert (concat "[[" filename "]]"))
+  (org-display-inline-images))
+#+END_SRC
+** key
+#+BEGIN_SRC elisp
 (map! :leader
       (:prefix ("j" . "just")
         "b" 'eaf-open-browser-with-history

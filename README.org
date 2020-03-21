@@ -1,0 +1,15 @@
+#+TITLE:   README
+#+DATE:    三月 22, 2020
+#+SINCE:   {replace with next tagged release version}
+#+STARTUP: inlineimages nofold
+
+个人使用 doom emacs 的配置文件
+
+除 init.el 之外, 大部分与 Emacs 相关的配置由 config.org 进行管理.
+
+dot 文件夹中放置日常使用的配置文件和脚本文件, 并非一定与 emacs 相关, 仅仅是为了
+便于统一管理, 其中包含的内容有:
+- rime: 存放 librime 相关的个人配置文件
+- xkeysnail: 存放键位映射配置和个人使用的用快捷键触发的脚本
+- latex: 存放 latex 公式转 word 的插件的 jar 包
+- emacs: 存放屏蔽掉 fcitx 的 emacs 的启动脚本
