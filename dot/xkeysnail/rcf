@@ -1,7 +1,60 @@
 #!/bin/bash
 choice=$1
-if [ "$choice" == "hiit" ]; then
+if [ "$choice" == "hiit-mp4" ]; then
+mpv "$HOME/Videos/rcf/hiit.mp4"
+
+elif [ "$choice" == "hiit-flv" ]; then
 mpv "$HOME/Videos/rcf/hiit.flv"
+
 elif [ "$choice" == "music-pause" ]; then
 xdotool key --window netease-net-music "Ctrl+Alt+p"
+
+elif [ "$choice" == "connect-wf" ]; then
+xdotool mousemove 0 0
+xdotool mousemove 25 25
+xdotool click 1
+xdotool mousemove 75 70
+xdotool click 1
+xdotool mousemove 60 830
+xdotool sleep 0.6
+xdotool click 1
+xdotool mousemove 655 295
+xdotool click 1
+xdotool mousemove 1385 235
+xdotool click 1
+xdotool sleep 3.6
+xdotool mousemove 0 0
+xdotool mousemove 25 920
+xdotool click 3
+xdotool key --repeat 2 "Down"
+xdotool key "Return"
+xdotool mousemove 960 540
+wmctrl -x -a kmix
+
+elif [ "$choice" == "disconnect-wf" ]; then
+xdotool mousemove 0 0
+xdotool mousemove 25 25
+xdotool click 1
+xdotool mousemove 75 70
+xdotool click 1
+xdotool mousemove 60 830
+xdotool sleep 0.6
+xdotool click 1
+xdotool mousemove 690 95
+xdotool click 1
+xdotool mousemove 1385 235
+xdotool click 1
+
+elif [ "$choice" == "tmp-d" ]; then
+spectacle -nbr -o /tmp/rcf-d.jpg
+chromium http://192.168.36.100:51314/
+wmctrl -x -a chromium
+echo "/tmp/rcf-d.jpg" | xclip -selection c
+xdotool mousemove 495 715
+xdotool sleep 3
+xdotool click 1
+xdotool sleep 1
+xdotool type "/tmp/rcf-d.jpg"
+xdotool key "Return"
+
 fi

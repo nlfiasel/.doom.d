@@ -15,11 +15,16 @@
 (use-package! posframe :defer 15)
 (setq evil-move-beyond-eol t)
 (global-set-key (kbd ",")
-                #'(lambda () (interactive) (insert ", ")))
+                #'(lambda () (interactive) (insert ",")))
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (set-popup-rule! "*lsp-help*"
   :side 'bottom :size 60 :modeline nil :select nil :quit t)
+(setq anki-editor-create-decks t)
 #+END_SRC
+
+#+RESULTS:
+: t
+
 
 ** theme
 #+BEGIN_SRC elisp
@@ -29,12 +34,15 @@
     (setq hour
         (string-to-number
             (substring (current-time-string) 11 13)))
-    (if (member hour (number-sequence 6 18))
+    (if (member hour (number-sequence 6 16))
         (setq doom-theme day-theme)
         (setq doom-theme dark-theme))
     (doom/reload-theme))
 (run-with-timer 0 3600 'synchronize-theme)
 #+END_SRC
+
+#+RESULTS:
+: [nil 24184 33215 91061 3600 synchronize-theme nil nil 666000]
 
 ** font
 #+BEGIN_SRC elisp
@@ -158,7 +166,7 @@
   :after  liberime
   :init
   (setq pyim-title "ㄓ")
-  (setq pyim-punctuation-translate-p '(no yes auto))
+  ;; (setq pyim-punctuation-translate-p '(no yes auto))
   (setq evil-input-method "pyim")
   :config
   (setq default-input-method "pyim")
@@ -176,6 +184,9 @@
   :init
   (setq liberime-user-data-dir "~/.doom.d/dot/rime/"))
 #+END_SRC
+
+#+RESULTS:
+: liberime
 
 ** google-translate
 #+BEGIN_SRC elisp
@@ -247,7 +258,20 @@
   (call-process-shell-command (concat "xclip -selection clipboard -t image/png -o > " filename))
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
+(defun just/anki-editor-cloze-dwim (&optional arg hint)
+  "Cloze current active region or a word the under the cursor"
+  (interactive)
+  (cond
+   ((region-active-p) (anki-editor-cloze (region-beginning) (region-end) arg " "))
+   ((thing-at-point 'word) (let ((bounds (bounds-of-thing-at-point 'word)))
+                             (anki-editor-cloze (car bounds) (cdr bounds) arg " ")))
+   (t (error "Nothing to create cloze from"))))
+
 #+END_SRC
+
+#+RESULTS:
+: just/anki-editor-cloze-dwim
+
 ** key
 #+BEGIN_SRC elisp
 (map! :leader
@@ -270,11 +294,23 @@
         "s" 'just/org-time-stamp
         "S" 'org-time-stamp
         "t" 'just/transparency
+        (:prefix ("a" . "anki")
+          "m" 'anki-editor-mode
+          :after anki-editor
+          "a" 'just/anki-editor-cloze-dwim
+          "c" 'anki-editor-cloze-dwim
+          "C" 'anki-editor-cloze-region
+          "h" 'anki-editor-convert-region-to-html
+          "H" 'anki-editor-export-subtree-to-html
+          "i" 'anki-editor-insert-note
+          "p" 'anki-editor-push-notes
+          "r" 'anki-editor-retry-failure-notes
+          )
         ))
 #+END_SRC
 
 #+RESULTS:
-: just/transparency
+: anki-editor-retry-failure-notes
 
 * package
 :PROPERTIES:
@@ -285,6 +321,7 @@
 ;; -*- no-byte-compile: t; -*-
 (package! sdcv)
 (package! emojify)
+(package! anki-editor)
 #+END_SRC
 
 ** rime

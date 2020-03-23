@@ -69,7 +69,7 @@ define_keymap(None, {
 
     K("RC-A"): launch(E("cycle", "anki")),
     K("RC-D"): launch(E("cycle", "dolphin")),
-    K("RC-E"): launch(E("cycle", "emacs")),
+    K("RC-E"): launch(E("cycle", "emacs /home/nlfiasel/.doom.d/dot/emacs/startup")),
     K("RC-M"): launch(E("cycle", "netease-cloud-music")),
     K("RC-Q"): launch(E("cycle", "mendeley")),
     K("RC-R"): launch(E("cycle", "konsole")),
@@ -82,8 +82,12 @@ define_keymap(None, {
     K("RC-Shift-O"): launch(E("ip", "change wlp58s0")),
 
     K("RC-J"): {
-        K("H"): launch(E("rcf", "hiit")),
+        K("H"): launch(E("rcf", "hiit-mp4")),
+        K("Shift-H"): launch(E("rcf", "hiit-flv")),
         K("P"): launch(E("rcf", "music-pause")),
+        K("C"): launch(E("rcf", "connect-wf")),
+        K("Shift-C"): launch(E("rcf", "disconnect-wf")),
+        K("D"): launch(E("rcf", "tmp-d")),
     }, 
 })
 

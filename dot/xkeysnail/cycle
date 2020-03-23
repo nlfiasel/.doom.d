@@ -1,5 +1,6 @@
 #!/bin/bash
 win_class=$1 # 'terminator' # $1
+start_class=$2 # 'terminator' # $1
 
 # get list of all windows matching with the class above
 win_list=$(wmctrl -x -l | awk '{print $1,$3}' | grep -i $win_class | awk '{print $1}' )
@@ -19,4 +20,9 @@ if [ "$switch_to" == '' ];then
 fi
 
 # switch to window
-wmctrl -i -a $switch_to || $win_class
+if [ "$start_class" == '' ];then
+    wmctrl -i -a $switch_to || $win_class
+else
+    wmctrl -i -a $switch_to || $start_class
+fi
+
