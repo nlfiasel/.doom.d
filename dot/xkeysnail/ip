@@ -1,0 +1,20 @@
+#!/bin/bash
+ip_command=$1
+ip_set=$2
+ip_dev=$(ip link show dev $ip_set | grep '^[0-9]' | awk '{print $3}' | grep 'UP')
+echo "$ip_dev"
+if [ ! -n "$ip_dev" ]; then
+    if [ "$ip_command" == "change" ]; then
+        kdialog --title "$ip_set: " --passivepopup "正在打开连接" 1
+        sudo ip link set $ip_set up
+    elif [ "$ip_command" == "status" ]; then
+        kdialog --title "$ip_set: " --passivepopup "当前处于关闭状态" 1
+    fi
+else
+    if [ "$ip_command" == "change" ]; then
+        kdialog --title "$ip_set: " --passivepopup "正在关闭连接" 1
+        sudo ip link set $ip_set down
+    elif [ "$ip_command" == "status" ]; then
+        kdialog --title "$ip_set: " --passivepopup "当前处于打开状态" 1
+    fi
+fi

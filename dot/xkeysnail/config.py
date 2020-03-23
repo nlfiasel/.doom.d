@@ -72,13 +72,13 @@ define_keymap(None, {
     K("RC-Q"): launch(E("cycle", "mendeley")),
     K("RC-R"): launch(E("cycle", "konsole")),
     K("RC-S"): launch(E("cycle", "mpv")),
-    K("RC-T"): launch(E("cycle", "telegram")),
+    K("RC-T"): launch(E("cycle", "telegram-desktop")),
     K("RC-W"): launch(E("cycle", "chromium")),
 
-    K("RC-I"): launch(E("ipstatus", "enp0s20f0u1")),
-    K("RC-Shift-I"): launch(E("iplink", "enp0s20f0u1")),
-    K("RC-O"): launch(E("ipstatus", "wlp58s0")),
-    K("RC-Shift-O"): launch(E("iplink", "wlp58s0")),
+    K("RC-I"): launch(E("ip", "status enp0s20f0u1")),
+    K("RC-Shift-I"): launch(E("ip", "change enp0s20f0u1")),
+    K("RC-O"): launch(E("ip", "status wlp58s0")),
+    K("RC-Shift-O"): launch(E("ip", "change wlp58s0")),
 })
 
 define_keymap(lambda wm_class: wm_class not in ("Emacs"), {

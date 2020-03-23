@@ -19,4 +19,4 @@ if [ "$switch_to" == '' ];then
 fi
 
 # switch to window
-wmctrl -i -a $switch_to
+wmctrl -i -a $switch_to || $win_class
