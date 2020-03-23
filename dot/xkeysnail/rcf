@@ -1,0 +1,7 @@
+#!/bin/bash
+choice=$1
+if [ "$choice" == "hiit" ]; then
+mpv "$HOME/Videos/rcf/hiit.flv"
+elif [ "$choice" == "music-pause" ]; then
+xdotool key --window netease-net-music "Ctrl+Alt+p"
+fi
