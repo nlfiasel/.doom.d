@@ -75,8 +75,6 @@ define_keymap(None, {
     K("RC-T"): launch(E("cycle", "telegram")),
     K("RC-W"): launch(E("cycle", "chromium")),
 
-    K("RC-C"): launch(E("capture", "")),
-
     K("RC-I"): launch(E("ipstatus", "enp0s20f0u1")),
     K("RC-Shift-I"): launch(E("iplink", "enp0s20f0u1")),
     K("RC-O"): launch(E("ipstatus", "wlp58s0")),
@@ -94,4 +92,5 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
 define_keymap(lambda wm_class: wm_class in ("Chromium"), {
     K("RC-J"): K("Shift-J"),
     K("RC-K"): K("Shift-K"),
+    K("RC-C"): launch(E("capture", "")),
 })

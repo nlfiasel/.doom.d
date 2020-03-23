@@ -11,14 +11,29 @@
 (global-visual-line-mode)
 (setq confirm-kill-emacs nil)
 (setq display-line-numbers-type 'visual)
-(setq doom-theme 'doom-dark+)
 (setq evil-escape-key-sequence nil)
 (use-package! posframe :defer 15)
 (setq evil-move-beyond-eol t)
 (global-set-key (kbd ",")
                 #'(lambda () (interactive) (insert ", ")))
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
-(set-popup-rule! "*lsp-help*" :side 'bottom :size 60 :modeline nil :select nil :quit t)
+(set-popup-rule! "*lsp-help*"
+  :side 'bottom :size 60 :modeline nil :select nil :quit t)
+#+END_SRC
+
+** theme
+#+BEGIN_SRC elisp
+(setq day-theme 'doom-nord-light)
+(setq dark-theme 'doom-dark+)
+(defun synchronize-theme ()
+    (setq hour
+        (string-to-number
+            (substring (current-time-string) 11 13)))
+    (if (member hour (number-sequence 6 18))
+        (setq doom-theme day-theme)
+        (setq doom-theme dark-theme))
+    (doom/reload-theme))
+(run-with-timer 0 3600 'synchronize-theme)
 #+END_SRC
 
 ** font
@@ -28,12 +43,13 @@
   ;; english font
   (if (display-graphic-p)
       (progn
-        (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" "Fira Code" 17)) ;; 11 13 17 19 23
+        (set-face-attribute 'default nil
+                            :font (format "%s:pixelsize=%d" "Fira Code" 17))
         ;; chinese font
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "Sarasa Mono SC")))) ;; 14 16 20 22 28
+                            (font-spec :family "Sarasa Mono SC"))))
     ))
 
 (defun +my|init-font(frame)
@@ -49,7 +65,8 @@
 ** sdcv
 #+BEGIN_SRC elisp
 (set-evil-initial-state! 'sdcv-mode 'emacs)
-(set-popup-rule! "*SDCV*" :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
+(set-popup-rule! "*SDCV*"
+  :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
 (setq sdcv-dictionary-complete-list
       '("朗道英汉字典5.0" "朗道汉英字典5.0"))
 #+END_SRC
@@ -70,17 +87,21 @@
         org-capture-templates
         `(
           ("p" "Protocol")
-          ("pp" "Protocol Page" entry (file+olp ,(concat org-directory "inbox.org") "Inbox" "Page")
-           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-          ("pL" "Protocol Link" entry (file+olp ,(concat org-directory "inbox.org") "Inbox" "Link")
+          ("pp" "Protocol Page" entry
+           (file+olp ,(concat org-directory "inbox.org") "Inbox" "Page")
+           "* %^{Title}\nSource: %u, %c\n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("pL" "Protocol Link" entry
+           (file+olp ,(concat org-directory "inbox.org") "Inbox" "Link")
            "* %? [[%:link][%:description]] \nCaptured On: %U")
 
           ("n" "Notes")
-          ("nm" "ML" entry (file+olp ,(concat org-directory "inbox.org") "Notes" "ML")
+          ("nm" "ML" entry
+           (file+olp ,(concat org-directory "inbox.org") "Notes" "ML")
            "* %?\n  %i\n  %a")
 
           ("j" "Journal")
-          ("jj" "Journal_O" entry (file+datetree ,(concat org-directory "journal.org"))
+          ("jj" "Journal_O"
+           entry (file+datetree ,(concat org-directory "journal.org"))
            "* %U - %^{heading} \n %?\n")
           ("jk" "Journal_T" entry (file+datetree ,(concat org-directory "journal.org"))
            "* %U - %^{heading} \n%T\n %?\n")
@@ -235,8 +256,8 @@
         "B" 'eaf-open-browser
         "c" 'just/xdg-browser
         "C" 'just/eaf-browser
-        "d" 'dir-emacs-repos
-        "e" 'dir-emacs
+        "d" 'just/emacs-repos
+        "e" 'just/emacs
         "g" 'google-translate-at-point
         "G" 'google-translate-at-point-reverse
         "i" 'org-insert-clipboard-image
@@ -244,17 +265,16 @@
         "J" 'sdcv-search-input
         "k" 'org-capture
         "K" 'org-agenda
-        "n" 'org-journal-new-entry
-        "o" 'dir-org
+        "o" 'just/org
         "p" 'pangu-spacing-space-current-buffer
         "s" 'just/org-time-stamp
         "S" 'org-time-stamp
-        "t" 'transparency
+        "t" 'just/transparency
         ))
 #+END_SRC
 
 #+RESULTS:
-: transparency
+: just/transparency
 
 * package
 :PROPERTIES:
