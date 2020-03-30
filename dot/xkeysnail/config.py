@@ -54,9 +54,6 @@ define_keymap(None, {
     K("RC-RIGHT_BRACE"): K("VOLUMEUP"),
     K("RC-BACKSLASH"): K("PRINT"),
     K("RC-APOSTROPHE"): K("CAPSLOCK"),
-    K("RC-U"): K("PREVIOUSSONG"),
-    K("RC-I"): K("PLAYPAUSE"),
-    K("RC-O"): K("NEXTSONG"),
 
     K("RC-LC-H"): K("LC-LEFT"),
     K("RC-LC-J"): K("LC-DOWN"),
@@ -70,8 +67,8 @@ define_keymap(None, {
     K("RC-A"): launch(E("cycle", "anki")),
     K("RC-D"): launch(E("cycle", "dolphin")),
     K("RC-E"): launch(E("cycle", "emacs /home/nlfiasel/.doom.d/dot/emacs/startup")),
+    K("RC-Shift-E"): launch(E("capture", "")),
     K("RC-M"): launch(E("cycle", "netease-cloud-music")),
-    K("RC-Q"): launch(E("cycle", "mendeley")),
     K("RC-R"): launch(E("cycle", "konsole")),
     K("RC-S"): launch(E("cycle", "mpv")),
     K("RC-T"): launch(E("cycle", "telegram-desktop")),
@@ -79,15 +76,22 @@ define_keymap(None, {
     K("RC-I"): launch(E("ip", "status enp0s20f0u1")),
     K("RC-Shift-I"): launch(E("ip", "change enp0s20f0u1")),
     K("RC-O"): launch(E("ip", "status wlp58s0")),
+    K("RC-Q"): launch(E("cycle", "mendeley")),
     K("RC-Shift-O"): launch(E("ip", "change wlp58s0")),
 
-    K("RC-J"): {
+    K("RC-Z"): {
         K("H"): launch(E("rcf", "hiit-mp4")),
         K("Shift-H"): launch(E("rcf", "hiit-flv")),
         K("P"): launch(E("rcf", "music-pause")),
         K("C"): launch(E("rcf", "connect-wf")),
         K("Shift-C"): launch(E("rcf", "disconnect-wf")),
         K("D"): launch(E("rcf", "tmp-d")),
+    }, 
+    
+    K("RC-X"): {
+        K("Q"): K("PREVIOUSSONG"),
+        K("W"): K("PLAYPAUSE"),
+        K("E"): K("NEXTSONG"),
     }, 
 })
 
@@ -102,5 +106,4 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
 define_keymap(lambda wm_class: wm_class in ("Chromium"), {
     K("RC-J"): K("Shift-J"),
     K("RC-K"): K("Shift-K"),
-    K("RC-C"): launch(E("capture", "")),
 })

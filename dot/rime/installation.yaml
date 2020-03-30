@@ -1,7 +1,8 @@
 distribution_code_name: "emacs-rime"
 distribution_name: Rime
-distribution_version: 0.1.0
+distribution_version: 1.0.1
 install_time: "Sun Mar  1 02:28:31 2020"
 installation_id: "a6ee331f-6213-40f9-a2a8-9c482d1d4b68"
 rime_version: 1.5.3
 sync_dir: "/home/nlfiasel/Dropbox/RimeSync"
+update_time: "Mon Mar 30 21:48:12 2020"

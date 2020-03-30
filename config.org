@@ -12,7 +12,6 @@
 (setq confirm-kill-emacs nil)
 (setq display-line-numbers-type 'visual)
 (setq evil-escape-key-sequence nil)
-(use-package! posframe :defer 15)
 (setq evil-move-beyond-eol t)
 (global-set-key (kbd ",")
                 #'(lambda () (interactive) (insert ",")))
@@ -20,6 +19,19 @@
 (set-popup-rule! "*lsp-help*"
   :side 'bottom :size 60 :modeline nil :select nil :quit t)
 (setq anki-editor-create-decks t)
+(use-package! ivy-posframe
+  :init
+(require 'ivy-posframe)
+;; display at `ivy-posframe-style'
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+(ivy-posframe-mode 1)
+
+  )
 #+END_SRC
 
 #+RESULTS:
@@ -31,14 +43,17 @@
 (setq day-theme 'doom-nord-light)
 (setq dark-theme 'doom-dark+)
 (defun synchronize-theme ()
-    (setq hour
+  (setq hour
         (string-to-number
-            (substring (current-time-string) 11 13)))
-    (if (member hour (number-sequence 6 16))
-        (setq doom-theme day-theme)
-        (setq doom-theme dark-theme))
-    (doom/reload-theme))
+         (substring (current-time-string) 11 13)))
+  (if (member hour (number-sequence 6 16))
+      (setq doom-theme day-theme)
+    (setq doom-theme dark-theme))
+  (doom/reload-theme))
 (run-with-timer 0 3600 'synchronize-theme)
+(doom-themes-set-faces 'user
+  '(ivy-posframe :background "#212337")
+  )
 #+END_SRC
 
 #+RESULTS:
@@ -162,31 +177,71 @@
 
 ** rime
 #+BEGIN_SRC elisp
-(use-package! pyim
-  :after  liberime
-  :init
-  (setq pyim-title "ㄓ")
-  ;; (setq pyim-punctuation-translate-p '(no yes auto))
-  (setq evil-input-method "pyim")
+(use-package! rime
+  :custom
+  (rime-posframe-properties
+   (list :background-color "#333333"
+         :foreground-color "#dcdccc"
+         :internal-border-width 10))
+  (rime-user-data-dir "~/.doom.d/dot/rime/")
+  (rime-show-candidate 'posframe)
+  (default-input-method "rime")
+  (evil-input-method "rime")
+  (rime-disable-predicates
+   '(rime-predicate-evil-mode-p
+     rime-predicate-after-alphabet-char-p
+rime-predicate-space-after-ascii-p
+     rime-predicate-after-ascii-char-p
+     rime-predicate-prog-in-code-p))
   :config
-  (setq default-input-method "pyim")
-  (setq pyim-page-tooltip 'minibuffer)
-  (setq pyim-default-scheme 'rime)
-  (setq pyim-page-length 9)
-  (setq-default pyim-english-input-switch-functions
-                '(pyim-probe-dynamic-english
-                  pyim-probe-isearch-mode
-                  pyim-probe-program-mode
-                  pyim-probe-org-structure-template))
-  (after! org
-    (map! :g "<XF86Tools>" 'pyim-convert-string-at-point)))
-(use-package! liberime
-  :init
-  (setq liberime-user-data-dir "~/.doom.d/dot/rime/"))
+  (defun +rime-force-enable ()
+    "[ENHANCED] Force into Chinese input state.
+If current input method is not `rime', active it first. If it is
+currently in the `evil' non-editable state, then switch to
+`evil-insert-state'."
+    (interactive)
+    (let ((input-method "rime"))
+      (unless (string= current-input-method input-method)
+        (activate-input-method input-method))
+      (when (rime-predicate-evil-mode-p)
+        (if (= (+ 1 (point)) (line-end-position))
+            (evil-append 1)
+          (evil-insert 1)))
+      (rime-force-enable)))
+  (defun +rime-convert-string-at-point ()
+    "Convert the string at point to Chinese using the current input scheme.
+First call `+rime-force-enable' to active the input method, and
+then search back from the current cursor for available string (if
+a string is selected, use it) as the input code, call the current
+input scheme to convert to Chinese."
+    (interactive)
+    (+rime-force-enable)
+    (let ((string (if mark-active
+                      (buffer-substring-no-properties
+                       (region-beginning) (region-end))
+                    (buffer-substring-no-properties
+                     (point) (max (line-beginning-position) (- (point) 80)))))
+          code
+          length)
+      (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\)[[:blank:]]*$" string)
+             (setq code (replace-regexp-in-string
+                         "^[-']" ""
+                         (match-string 0 string)))
+             (setq length (length code))
+             (setq code (replace-regexp-in-string " +" "" code))
+             (if mark-active
+                 (delete-region (region-beginning) (region-end))
+               (when (> length 0)
+                 (delete-char (- 0 length))))
+             (when (> length 0)
+               (setq unread-command-events
+                     (append (listify-key-sequence code)
+                             unread-command-events))))
+            (t (message "`+rime-convert-string-at-point' did nothing.")))))
+  (map! :g "<XF86Tools>" '+rime-convert-string-at-point)
+  )
 #+END_SRC
 
-#+RESULTS:
-: liberime
 
 ** google-translate
 #+BEGIN_SRC elisp
@@ -322,14 +377,16 @@
 (package! sdcv)
 (package! emojify)
 (package! anki-editor)
+(package! ivy-posframe)
+(package! rime)
 #+END_SRC
 
 ** rime
 #+BEGIN_SRC elisp
-(package! liberime
+(package! rime
   :recipe (:host github
-                 :repo "merrickluo/liberime"
-                 :files ("CMakeLists.txt" "Makefile" "src" "liberime.el" "liberime-config.el")))
+                 :repo "DogLooksGood/emacs-rime"
+                 :files ("*.el" "Makefile" "lib.c")))
 #+END_SRC
 ** eaf
 #+BEGIN_SRC elisp
@@ -339,14 +396,6 @@
                  :files ("*")))
 #+END_SRC
 
-** posframe
-#+BEGIN_SRC elisp
-(package! posframe
-  :disable t
-  :recipe (:host github
-                 :repo "tumashu/posframe"
-                 :files ("*")))
-#+END_SRC
 ** emacs-snippets
 #+BEGIN_SRC elisp
 (package! emacs-snippets :recipe (:host github :repo "hlissner/emacs-snippets" :files ("*")))
