@@ -102,7 +102,6 @@ define_keymap(lambda wm_class: wm_class not in ("Emacs"), {
     K("LC-L"): K("RIGHT"),
 })
 
-
 define_keymap(lambda wm_class: wm_class in ("Chromium"), {
     K("RC-J"): K("Shift-J"),
     K("RC-K"): K("Shift-K"),

@@ -1,5 +1,5 @@
 patch:
-  'punctuator/import_preset': alternative
+  # 'punctuator/import_preset': alternative
   "translator/dictionary": luna_pinyin.extended
   "translator/preedit_format": {}
   switches:                   # 注意縮進

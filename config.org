@@ -5,6 +5,7 @@
 ** header
 (native-compile-async "~/.emacs.d/.local/straight/build/" 2 t)
 #+BEGIN_SRC elisp
+;;; config.el -*- lexical-binding: t; -*-
 (map! "C-x b" 'switch-to-buffer)
 (map! "C-x C-b" '+ivy/switch-workspace-buffer)
 (map! "C-x C-o" 'ace-window)
@@ -19,24 +20,19 @@
 (set-popup-rule! "*lsp-help*"
   :side 'bottom :size 60 :modeline nil :select nil :quit t)
 (setq anki-editor-create-decks t)
+#+END_SRC
+
+** ivy-posframe
+#+BEGIN_SRC elisp
 (use-package! ivy-posframe
+  :defer 1
   :init
 (require 'ivy-posframe)
 ;; display at `ivy-posframe-style'
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-(ivy-posframe-mode 1)
-
-  )
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+(ivy-posframe-mode 1))
 #+END_SRC
-
-#+RESULTS:
-: t
-
 
 ** theme
 #+BEGIN_SRC elisp
@@ -49,15 +45,11 @@
   (if (member hour (number-sequence 6 16))
       (setq doom-theme day-theme)
     (setq doom-theme dark-theme))
-  (doom/reload-theme))
+  (doom/reload-theme)
+  (if (member hour (number-sequence 6 16))
+      (doom-themes-set-faces 'user '(ivy-posframe :background "#212337"))))
 (run-with-timer 0 3600 'synchronize-theme)
-(doom-themes-set-faces 'user
-  '(ivy-posframe :background "#212337")
-  )
 #+END_SRC
-
-#+RESULTS:
-: [nil 24184 33215 91061 3600 synchronize-theme nil nil 666000]
 
 ** font
 #+BEGIN_SRC elisp
@@ -87,11 +79,15 @@
 
 ** sdcv
 #+BEGIN_SRC elisp
-(set-evil-initial-state! 'sdcv-mode 'emacs)
-(set-popup-rule! "*SDCV*"
-  :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
-(setq sdcv-dictionary-complete-list
-      '("朗道英汉字典5.0" "朗道汉英字典5.0"))
+(use-package! sdcv
+  :defer 1
+  :config
+  (set-evil-initial-state! 'sdcv-mode 'emacs)
+  (set-popup-rule! "*SDCV*"
+    :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
+  (setq sdcv-dictionary-complete-list
+        '("朗道英汉字典5.0" "朗道汉英字典5.0"))
+  )
 #+END_SRC
 
 ** org
@@ -178,6 +174,7 @@
 ** rime
 #+BEGIN_SRC elisp
 (use-package! rime
+  :defer 1
   :custom
   (rime-posframe-properties
    (list :background-color "#333333"
@@ -189,59 +186,17 @@
   (evil-input-method "rime")
   (rime-disable-predicates
    '(rime-predicate-evil-mode-p
+     rime-predicate-punctuation-after-ascii-p
+     rime-predicate-punctuation-line-begin-p
      rime-predicate-after-alphabet-char-p
-rime-predicate-space-after-ascii-p
-     rime-predicate-after-ascii-char-p
+     rime-predicate-space-after-ascii-p
+     rime-predicate-emacs-mode-p
      rime-predicate-prog-in-code-p))
   :config
-  (defun +rime-force-enable ()
-    "[ENHANCED] Force into Chinese input state.
-If current input method is not `rime', active it first. If it is
-currently in the `evil' non-editable state, then switch to
-`evil-insert-state'."
-    (interactive)
-    (let ((input-method "rime"))
-      (unless (string= current-input-method input-method)
-        (activate-input-method input-method))
-      (when (rime-predicate-evil-mode-p)
-        (if (= (+ 1 (point)) (line-end-position))
-            (evil-append 1)
-          (evil-insert 1)))
-      (rime-force-enable)))
-  (defun +rime-convert-string-at-point ()
-    "Convert the string at point to Chinese using the current input scheme.
-First call `+rime-force-enable' to active the input method, and
-then search back from the current cursor for available string (if
-a string is selected, use it) as the input code, call the current
-input scheme to convert to Chinese."
-    (interactive)
-    (+rime-force-enable)
-    (let ((string (if mark-active
-                      (buffer-substring-no-properties
-                       (region-beginning) (region-end))
-                    (buffer-substring-no-properties
-                     (point) (max (line-beginning-position) (- (point) 80)))))
-          code
-          length)
-      (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\)[[:blank:]]*$" string)
-             (setq code (replace-regexp-in-string
-                         "^[-']" ""
-                         (match-string 0 string)))
-             (setq length (length code))
-             (setq code (replace-regexp-in-string " +" "" code))
-             (if mark-active
-                 (delete-region (region-beginning) (region-end))
-               (when (> length 0)
-                 (delete-char (- 0 length))))
-             (when (> length 0)
-               (setq unread-command-events
-                     (append (listify-key-sequence code)
-                             unread-command-events))))
-            (t (message "`+rime-convert-string-at-point' did nothing.")))))
-  (map! :g "<XF86Tools>" '+rime-convert-string-at-point)
-  )
+  (defun rime-predicate-emacs-mode-p ()
+    (and (fboundp 'evil-mode) (evil-emacs-state-p)))
+  (map! :g "<XF86Tools>" 'rime-force-enable))
 #+END_SRC
-
 
 ** google-translate
 #+BEGIN_SRC elisp
@@ -367,6 +322,14 @@ input scheme to convert to Chinese."
 #+RESULTS:
 : anki-editor-retry-failure-notes
 
+** flycheck
+#+BEGIN_SRC elisp
+(use-package flycheck-posframe
+  :defer 3
+  :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+#+END_SRC
 * package
 :PROPERTIES:
 :header-args: :tangle packages.el
@@ -374,11 +337,11 @@ input scheme to convert to Chinese."
 ** header
 #+BEGIN_SRC elisp
 ;; -*- no-byte-compile: t; -*-
+(package! flycheck-posframe)
 (package! sdcv)
 (package! emojify)
 (package! anki-editor)
 (package! ivy-posframe)
-(package! rime)
 #+END_SRC
 
 ** rime
