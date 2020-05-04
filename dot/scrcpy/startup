@@ -1,0 +1,4 @@
+#!/bin/sh
+export XMODIFIERS="@im=ibus"
+/usr/bin/scrcpy -f -m 1080
+

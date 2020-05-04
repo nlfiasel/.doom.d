@@ -15,24 +15,21 @@ define_timeout(0.3)
 define_modmap({
     Key.ESC: Key.GRAVE,
     Key.CAPSLOCK: Key.LEFT_CTRL,
-    Key.RIGHT_ALT: Key.LEFT_SHIFT,
+    # Key.RIGHT_ALT: Key.LEFT_SHIFT,
 })
 
 define_multipurpose_modmap({
     Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
-    Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
-    Key.GRAVE: [Key.GRAVE, Key.LEFT_META],
 })
 
 define_conditional_multipurpose_modmap(re.compile(r'Emacs'), {
     Key.TAB: [Key.TAB, Key.RIGHT_CTRL],
-    Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.SPACE: [Key.SPACE, Key.LEFT_CTRL],
     Key.LEFT_SHIFT: [Key.F13, Key.LEFT_SHIFT],
-    Key.GRAVE: [Key.GRAVE, Key.LEFT_META],
+    Key.RIGHT_SHIFT: [Key.F14, Key.RIGHT_SHIFT],
 })
 
 define_keymap(None, {
@@ -79,6 +76,8 @@ define_keymap(None, {
     K("RC-Q"): launch(E("cycle", "mendeley")),
     K("RC-Shift-O"): launch(E("ip", "change wlp58s0")),
 
+    K("RC-Y"): launch(E("cycle", "virt-manager")),
+
     K("RC-Z"): {
         K("H"): launch(E("rcf", "hiit-mp4")),
         K("Shift-H"): launch(E("rcf", "hiit-flv")),
@@ -89,9 +88,11 @@ define_keymap(None, {
     }, 
     
     K("RC-X"): {
-        K("Q"): K("PREVIOUSSONG"),
-        K("W"): K("PLAYPAUSE"),
-        K("E"): K("NEXTSONG"),
+        # K("Q"): K("PREVIOUSSONG"),
+        # K("W"): K("PLAYPAUSE"),
+        # K("E"): K("NEXTSONG"),
+        K("W"): launch(E("virt-manager -c qemu:///system --show-domain-console win10")), 
+        K("S"): launch(E("cycle", "scrcpy /home/nlfiasel/.doom.d/dot/scrcpy/startup")),
     }, 
 })
 

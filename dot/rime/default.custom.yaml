@@ -3,3 +3,9 @@ patch:
     page_size: 9
   schema_list :
     - schema : double_pinyin_flypy   #小鹤双拼
+  ascii_composer/switch_key:
+    Caps_Lock: noop
+    Shift_L: commit_code
+    Shift_R: noop
+    Control_L: noop
+    Control_R: noop

@@ -15,14 +15,32 @@
 (setq evil-escape-key-sequence nil)
 (setq evil-move-beyond-eol t)
 (global-set-key (kbd ",")
-                #'(lambda () (interactive) (insert ",")))
+                #'(lambda () (interactive) (insert ", ")))
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (set-popup-rule! "*lsp-help*"
   :side 'bottom :size 60 :modeline nil :select nil :quit t)
 (setq anki-editor-create-decks t)
+(use-package! company-english-helper
+  :defer 3
+  :init
+  (require 'company-english-helper)
+  :config
+  (toggle-company-english-helper)
+  )
+(use-package! company-posframe
+  :defer 3
+  :init
+  (require 'company-posframe)
+  (company-posframe-mode 1)
+  :custom
+  (company-posframe-show-indicator nil))
 #+END_SRC
 
-** ivy-posframe
+#+RESULTS:
+: company-posframe
+
+** use-package
+*** ivy-posframe
 #+BEGIN_SRC elisp
 (use-package! ivy-posframe
   :defer 1
@@ -34,7 +52,128 @@
 (ivy-posframe-mode 1))
 #+END_SRC
 
+*** sdcv
+#+BEGIN_SRC elisp
+(use-package! sdcv
+  :defer 1
+  :config
+  (set-evil-initial-state! 'sdcv-mode 'emacs)
+  (set-popup-rule! "*SDCV*"
+    :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
+  (setq sdcv-dictionary-complete-list
+        '("朗道英汉字典5.0" "朗道汉英字典5.0"))
+  )
+#+END_SRC
+
+*** eaf
+#+BEGIN_SRC elisp
+(use-package! eaf
+  :defer 6
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (set-evil-initial-state! 'eaf-mode 'emacs)
+  (add-hook 'eaf-mode-hook #'hide-mode-line-mode)
+
+  (defun eaf-org-open-file (file &optional link)
+    (eaf-open file))
+
+
+  (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
+  (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
+  (eaf-bind-key sdcv-search-input "M-i" eaf-browser-keybinding)
+  (eaf-bind-key eaf-open-bookmark "C-c m" eaf-browser-keybinding)
+
+  (eaf-setq eaf-browser-enable-plugin "false")
+  (eaf-setq eaf-browser-enable-javascript "true")
+  (eaf-setq eaf-browser-default-zoom "1.25")
+
+  (defalias 'browse-web #'eaf-open-browser))
+#+END_SRC
+
+*** rime
+#+BEGIN_SRC elisp
+(use-package! rime
+  :defer 1
+  :custom
+  (rime-posframe-properties
+   (list :background-color "#333333"
+         :foreground-color "#dcdccc"
+         :internal-border-width 10))
+  (rime-user-data-dir "~/.doom.d/dot/rime/")
+  (rime-show-candidate 'posframe)
+  (default-input-method "rime")
+  (evil-input-method "rime")
+  (rime-disable-predicates
+   '(rime-predicate-evil-mode-p
+     rime-predicate-current-uppercase-letter-p
+     rime-predicate-punctuation-after-ascii-p
+     rime-predicate-punctuation-line-begin-p
+     rime-predicate-after-alphabet-char-p
+     rime-predicate-space-after-ascii-p
+     rime-predicate-emacs-mode-p
+     rime-predicate-prog-in-code-p))
+  :config
+  (defun rime-predicate-emacs-mode-p ()
+    (and (fboundp 'evil-mode) (evil-emacs-state-p)))
+  (map! :g "<XF86Tools>" 'rime-force-enable
+        :g "<XF86Launch5>" 'rime-inline-ascii
+        ))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** google-translate
+#+BEGIN_SRC elisp
+(use-package! google-translate
+  :defer 3
+  :custom
+  (google-translate-base-url "https://translate.google.cn/translate_a/single")
+  (google-translate--tkk-url "https://translate.google.cn/")
+  (google-translate-listen-url "https://translate.google.cn/translate_tts")
+  (google-translate-backend-method 'curl)
+  (google-translate-pop-up-buffer-set-focus t)
+  (google-translate-default-source-language "en")
+  (google-translate-default-target-language "zh-CN")
+  :config
+  (when (and (string-match "0.11.18"
+                           (google-translate-version))
+             (>= (time-to-seconds)
+                 (time-to-seconds
+                  (encode-time 0 0 0 23 9 2018))))
+    (defun google-translate--get-b-d1 ()
+      ;; TKK='427110.1469889687'
+      (list 427110 1469889687)))
+  )
+#+END_SRC
+
+*** flycheck
+#+BEGIN_SRC elisp
+(use-package flycheck-posframe
+  :defer 3
+  :ensure t
+  :after flycheck
+  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+#+END_SRC
+
+*** nov.el
+#+BEGIN_SRC elisp
+(use-package novel
+  :defer 3
+:init
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+:config
+(setq nov-text-width 80))
+#+END_SRC
+
+*** esxml
+#+BEGIN_SRC elisp
+(use-package esxml)
+#+END_SRC
+
 ** theme
+*** auto-change
 #+BEGIN_SRC elisp
 (setq day-theme 'doom-nord-light)
 (setq dark-theme 'doom-dark+)
@@ -45,13 +184,11 @@
   (if (member hour (number-sequence 6 16))
       (setq doom-theme day-theme)
     (setq doom-theme dark-theme))
-  (doom/reload-theme)
-  (if (member hour (number-sequence 6 16))
-      (doom-themes-set-faces 'user '(ivy-posframe :background "#212337"))))
+  (doom/reload-theme))
 (run-with-timer 0 3600 'synchronize-theme)
 #+END_SRC
 
-** font
+*** font
 #+BEGIN_SRC elisp
 (defun +my/better-font()
   (interactive)
@@ -60,6 +197,7 @@
       (progn
         (set-face-attribute 'default nil
                             :font (format "%s:pixelsize=%d" "Fira Code" 17))
+                            ;; :font (format "%s:pixelsize=%d" "Fira Code" 24))
         ;; chinese font
         (dolist (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
@@ -75,19 +213,6 @@
 (if (and (fboundp 'daemonp) (daemonp))
     (add-hook 'after-make-frame-functions #'+my|init-font)
   (+my/better-font))
-#+END_SRC
-
-** sdcv
-#+BEGIN_SRC elisp
-(use-package! sdcv
-  :defer 1
-  :config
-  (set-evil-initial-state! 'sdcv-mode 'emacs)
-  (set-popup-rule! "*SDCV*"
-    :side 'right :size 60 :modeline nil :select nil :quit t :transient t)
-  (setq sdcv-dictionary-complete-list
-        '("朗道英汉字典5.0" "朗道汉英字典5.0"))
-  )
 #+END_SRC
 
 ** org
@@ -145,85 +270,6 @@
 (setq tramp-ssh-controlmaster-options
       "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
-** eaf
-#+BEGIN_SRC elisp
-(use-package! eaf
-  :defer 6
-  :custom
-  (eaf-find-alternate-file-in-dired t)
-  :config
-  (set-evil-initial-state! 'eaf-mode 'emacs)
-  (add-hook 'eaf-mode-hook #'hide-mode-line-mode)
-
-  (defun eaf-org-open-file (file &optional link)
-    (eaf-open file))
-
-
-  (eaf-bind-key eaf-open-browser "C-c b" eaf-browser-keybinding)
-  (eaf-bind-key dark_mode "M-d" eaf-browser-keybinding)
-  (eaf-bind-key sdcv-search-input "M-i" eaf-browser-keybinding)
-  (eaf-bind-key eaf-open-bookmark "C-c m" eaf-browser-keybinding)
-
-  (eaf-setq eaf-browser-enable-plugin "false")
-  (eaf-setq eaf-browser-enable-javascript "true")
-  (eaf-setq eaf-browser-default-zoom "1.25")
-
-  (defalias 'browse-web #'eaf-open-browser))
-#+END_SRC
-
-** rime
-#+BEGIN_SRC elisp
-(use-package! rime
-  :defer 1
-  :custom
-  (rime-posframe-properties
-   (list :background-color "#333333"
-         :foreground-color "#dcdccc"
-         :internal-border-width 10))
-  (rime-user-data-dir "~/.doom.d/dot/rime/")
-  (rime-show-candidate 'posframe)
-  (default-input-method "rime")
-  (evil-input-method "rime")
-  (rime-disable-predicates
-   '(rime-predicate-evil-mode-p
-     rime-predicate-punctuation-after-ascii-p
-     rime-predicate-punctuation-line-begin-p
-     rime-predicate-after-alphabet-char-p
-     rime-predicate-space-after-ascii-p
-     rime-predicate-emacs-mode-p
-     rime-predicate-prog-in-code-p))
-  :config
-  (defun rime-predicate-emacs-mode-p ()
-    (and (fboundp 'evil-mode) (evil-emacs-state-p)))
-  (map! :g "<XF86Tools>" 'rime-force-enable))
-#+END_SRC
-
-** google-translate
-#+BEGIN_SRC elisp
-(use-package! google-translate
-  :defer 3
-  :config
-  (when (and (string-match "0.11.18"
-                           (google-translate-version))
-             (>= (time-to-seconds)
-                 (time-to-seconds
-                  (encode-time 0 0 0 23 9 2018))))
-    (defun google-translate--get-b-d1 ()
-      ;; TKK='427110.1469889687'
-      (list 427110 1469889687)))
-  )
-(setq google-translate-base-url
-      "https://translate.google.cn/translate_a/single")
-(setq google-translate--tkk-url
-      "https://translate.google.cn/")
-(setq google-translate-listen-url
-      "https://translate.google.cn/translate_tts")
-(setq google-translate-backend-method 'curl)
-(setq google-translate-pop-up-buffer-set-focus t)
-(setq google-translate-default-source-language "en")
-(setq google-translate-default-target-language "zh-CN")
-#+END_SRC
-
 ** latex
 #+BEGIN_SRC elisp
 (setq org-latex-to-mathml-convert-command
@@ -292,8 +338,10 @@
         "C" 'just/eaf-browser
         "d" 'just/emacs-repos
         "e" 'just/emacs
+        "f" 'eaf-open
         "g" 'google-translate-at-point
         "G" 'google-translate-at-point-reverse
+        "h" 'hide-mode-line-mode
         "i" 'org-insert-clipboard-image
         "j" 'sdcv-search-pointer
         "J" 'sdcv-search-input
@@ -317,19 +365,10 @@
           "r" 'anki-editor-retry-failure-notes
           )
         ))
-#+END_SRC
+        #+END_SRC
 
 #+RESULTS:
-: anki-editor-retry-failure-notes
 
-** flycheck
-#+BEGIN_SRC elisp
-(use-package flycheck-posframe
-  :defer 3
-  :ensure t
-  :after flycheck
-  :config (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
-#+END_SRC
 * package
 :PROPERTIES:
 :header-args: :tangle packages.el
@@ -342,6 +381,19 @@
 (package! emojify)
 (package! anki-editor)
 (package! ivy-posframe)
+(package! company-posframe)
+(package! shrface
+  :recipe (:host github
+           :repo "chenyanming/shrface"
+           :files ("*")))
+(package! novel
+  :recipe (:host github
+           :repo "wasamasa/nov.el"
+           :files ("*")))
+(package! esxml
+  :recipe (:host github
+           :repo "tali713/esxml"
+           :files ("*")))
 #+END_SRC
 
 ** rime
@@ -368,4 +420,10 @@
 #+BEGIN_SRC elisp
 (package! google-translate
   :recipe (:host github :repo "f279801/google-translate" :branch "#98"))
+#+END_SRC
+
+** company-english-helper
+#+BEGIN_SRC elisp
+(package! company-english-helper
+  :recipe (:host github :repo "manateelazycat/company-english-helper"))
 #+END_SRC
